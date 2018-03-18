@@ -1,0 +1,58 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "rules": {
+    "indent": [2, 4, { "MemberExpression": 1, "SwitchCase": 1 }], // 如果tab为两个空格,请删除本配置
+    "react/jsx-indent": [ 2, 4 ], // 如果tab为两个空格,请删除本配置
+    "react/jsx-indent-props": [ 2, 4 ], // 如果tab为两个空格,请删除本配置
+    "linebreak-style": [0, "windows"], // 如果非windows开发环境,请删除本配置
+    "no-unused-vars": [0], //'xxxx' is defined but never used
+    "no-underscore-dangle": [0], //Unexpected dangling '_' in '_models'
+    "no-multi-spaces": [0],// 解决 > 之前有 “/” 问题 
+    "no-console": [0], //去掉console的提示,
+    "no-undef": [0], // 提示 未定义参数,
+    "func-names": [0],
+    "no-param-reassign": [0],
+    "no-eval": [0],
+    "no-unused-expressions": [0],
+    "no-empty": [0],
+    "no-empty-pattern": [0],
+    "no-useless-escape": [1],
+    "no-extra-boolean-cast": [0],
+    "react/no-array-index-key": [1],
+    "react/no-string-refs": [0],
+      "no-extend-native": [1],
+    "no-mixed-operators": [0],
+    "no-plusplus": [0],
+    "guard-for-in": [0],
+      "no-script-url": [1],
+    "generator-star-spacing": [0],
+    "consistent-return": [0],
+    "react/forbid-prop-types": [0],
+    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
+    "global-require": [1],
+    "import/prefer-default-export": [0],
+    "react/jsx-no-bind": [0],
+    "react/prop-types": [0],
+    "react/prefer-stateless-function": [0],
+    "no-else-return": [0],
+    "no-restricted-syntax": [0],
+    "import/no-extraneous-dependencies": [0],
+    "no-use-before-define": [0],
+    "jsx-a11y/no-static-element-interactions": [0],
+    "no-nested-ternary": [0],
+    "arrow-body-style": [0],
+    "import/extensions": [0],
+    "no-bitwise": [0],
+    "no-cond-assign": [0],
+    "import/no-unresolved": [0],
+    "require-yield": [1],
+    "max-len":[0],
+    "class-methods-use-this": [0]
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  }
+}

@@ -1,0 +1,51 @@
+$baseFontSize:100;
+$designWidth:750;
+$baseWidth:1080;
+$maxWidth:750px;
+@function px2rem($px, $designWidth:1080) {
+    @return ($px/$baseFontSize)*($baseWidth/$designWidth)+rem;
+}
+
+@function p2r($px, $designWidth:375) {
+    @return ($px/$baseFontSize)*($baseWidth/$designWidth)+rem;
+}
+
+@mixin both-center() {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin v-center() {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin h-center() {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@mixin clear-both() {
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+@mixin ellipsis-text($clamp:2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: $clamp;// eslint-disable-next-line
+    /* autoprefixer: off*/
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on*/
+}

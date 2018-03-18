@@ -1,0 +1,89 @@
+.form-group{
+  margin-top: px2rem(30);
+  position: relative;
+  .form-control ~ .form-control{
+    .control-inner{
+      border-top:1px solid $light-gray;
+    }
+  }
+  .form-control{
+    .control-inner{
+      height: 100%;
+      padding-right: 0.4rem;
+    }
+  }
+  &.no-background{
+    margin-bottom: px2rem(14,375);
+    margin-top: px2rem(21,375);
+    .form-control{
+      line-height: normal;
+      background: none;
+      padding-bottom: px2rem(5,375);
+      .control-inner{
+        border-top: none;
+      }
+      .label{
+        font-size: px2rem(12,375);
+        color: $app-txt-color-gray;
+      }
+      .input{
+        font-size: px2rem(12,375);
+        color: $app-txt-color-gray;
+        &.disabled{
+          display: inline;
+          position: relative;
+          transform: none;
+          right: 0;
+          top:0;
+          margin-left: px2rem(15,375);
+        }
+      }
+    }
+  }
+}
+.form-group .form-control-validate{
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+  background: #fff;
+  left: .4rem;
+  top:px2rem(14,375);
+  font-size: px2rem(12,375);
+}
+//输入提示
+.form-control-validate{
+  color: $danger;
+  font-size: px2rem(36);
+  position: relative;
+  .icon-danger{
+    display: inline-block;
+    font-size: 1.5em;
+    position: absolute;
+    @include v-center();
+    left: 0;
+  }
+}
+.form-control-info{
+  color: #97daff;
+  font-size: px2rem(60);
+  position: absolute;
+  @include v-center();
+  top:48%;
+  right: px2rem(40);
+  line-height: 1em;
+  &:before{
+    content: "\e603";
+    font-family: "iconfont";
+  }
+}
+.form-control-right{
+  padding-right: 0.6rem;
+
+  position: relative;
+  .form-control-info{
+    right: 0;
+  }
+}
+.txt-danger{
+  color: #EC0D1A !important;
+}

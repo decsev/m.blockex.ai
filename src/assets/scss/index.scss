@@ -1,0 +1,31 @@
+@import "variable";
+@import "mixin/function";
+@import "animate";
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.ant-modal-footer {
+	text-align: inherit;
+}
+.ant-modal-footer {
+	padding: 0 0;
+}
+.btn-cancel {
+	border-right: 1px solid #000;
+	margin: 10px 0;
+    border: 0;
+    color: #2A84F8;
+    width: 50%;
+    font-size: 18px;
+}
+
+.btn-ok {
+	margin-left: 0 !important;
+	margin: 10px 0;
+    border: 0;
+    color: #2A84F8;
+    width: 50%;
+    font-size: 18px;
+	background-color: #fff;
+}

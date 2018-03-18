@@ -1,0 +1,67 @@
+.btn {
+  $primary-active-color: #8dccff;
+  $danger-active-color: #edb4b5;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  background: none;
+  margin: 0;
+  white-space: nowrap;
+  position: relative;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  font-size: px2rem(48);
+  padding: px2rem(45) px2rem(50);
+  color: #fff;
+  border-radius: px2rem(10);
+  outline: none;
+  border: none;
+  &:disabled,&.disabled{
+    background-color: $disabled !important;
+  }
+  &.btn-block {
+    width: 100%;
+  }
+  &.btn-primary {
+    background-color: $primary;
+    color: #fff;
+    &:active {
+      background-color: $dark-primary;
+      color: $primary-active-color; 
+    }
+  }
+  &.btn-danger{
+    background-color: $danger;
+    color: #fff;
+    //&:active{
+    //  background: #D72630;
+    //  color: $danger-active-color;
+    //}
+  }
+  &.no-radius{
+    border-radius: px2rem(0);
+  }
+  &.btn-border{
+    font-size: px2rem(32);
+    width: px2rem(178);
+    height: px2rem(70);
+    padding: 0;
+    line-height: px2rem(70);
+    &.btn-primary{
+      color: #1578d8;
+      border: 1px solid #1578d8;
+      border-radius: px2rem(10);
+      background-color: transparent;
+    }
+    &:active{
+      background: #E2EEFA;
+      border: 1px solid #1578D8;
+    }
+  }
+}
+

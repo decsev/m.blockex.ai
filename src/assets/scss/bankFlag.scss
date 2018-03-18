@@ -1,0 +1,190 @@
+@import "./index.scss";
+[class^="bank-icon-"], [class*=" bank-icon-"]{
+    width:1.5em;
+    height:1.5em;
+    display:inline-block;
+	background-size: 100%;
+	-webkit-background-size: 100%;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/*中国农业银行*/
+.bank-icon-aboc{
+	background-image: url(../img/bankFlags/aboc.png)!important;
+}
+.bank-aboc{
+	background-position-y:-150px;
+}
+/*中国建设银行*/
+.bank-icon-ccb{
+	background-image: url(../img/bankFlags/ccb.png)!important;
+}
+.bank-ccb{
+	background-position-y:-50px;
+}
+/*北京银行*/
+.bank-icon-beijing{
+	background-image: url(../img/bankFlags/beijing.png)!important;
+}
+.bank-beijing{
+	background-position-y:-600px;
+}
+/*中国交通银行*/
+.bank-icon-bocc{
+	background-image: url(../img/bankFlags/bocc.png)!important;
+}
+.bank-bocc{
+	background-position-y:-250px;
+}
+/*中国银行*/
+.bank-icon-boc{
+	background-image: url(../img/bankFlags/boc.png)!important;
+}
+.bank-boc{
+	background-position-y:-100px;
+}
+/*招商银行*/
+.bank-icon-cmb{
+	background-image: url(../img/bankFlags/cmb.png)!important;
+}
+.bank-cmb{
+	background-position-y:-200px;
+}
+/*中国民生银行*/
+.bank-icon-cmbc{
+	background-image: url(../img/bankFlags/cmbc.png)!important;
+}
+.bank-cmbc{
+	background-position-y:-350px;
+}
+/*广发银行*/
+.bank-icon-guangfa{
+	background-image: url(../img/bankFlags/guangfa.png)!important;
+}
+.bank-guangfa{
+	background-position-y:-550px;
+}
+/*中国工商银行*/
+.bank-icon-iacboc{
+	/*background-position: 0 px2rem(-2079);
+	background-image: url(../img/bank-flag.png);*/
+	background-image: url(../img/bankFlags/iacboc.png)!important;
+}
+.bank-iacboc{
+	background-position-y:0;
+}
+/*兴业银行*/
+.bank-icon-ibc{
+	background-image: url(../img/bankFlags/ibc.png)!important;
+}
+.bank-ibc{
+	background-position-y:-300px;
+}
+/*平安银行*/
+.bank-icon-pab{
+	background-image: url(../img/bankFlags/pab.png)!important;
+}
+.bank-pab{
+	background-position-y:-750px;
+}
+/*中国邮政储蓄银行*/
+.bank-icon-psboc{
+	/*background-position: 0 px2rem(-784);*/
+	background-image: url(../img/bankFlags/psboc.png)!important;
+}
+.bank-psboc{
+	background-position-y:-450px;
+}
+/*深圳发展银行*/
+.bank-icon-sdbc{
+	background-image: url(../img/bankFlags/sdbc.png)!important;
+}
+.bank-sdbc{
+    background-position-y:-400px;
+}
+/*浦发银行*/
+.bank-icon-spd{
+	background-image: url(../img/bankFlags/spd.png)!important;
+}
+.bank-spd{
+	background-position-y:-700px;
+}
+/*中信银行*/
+.bank-icon-zhongxin{
+	background-image: url(../img/bankFlags/zhongxin.png)!important;
+}
+.bank-zhongxin{
+	background-position-y:-500px;
+}
+/*广东发展银行*/
+.bank-gddbc{
+    background-position-y:-550px;
+}
+.bank-icon-gddbc{
+	background-image: url(../img/bankFlags/gddbc.png)!important;
+}
+/*华夏银行*/
+.bank-hxb{
+    background-position-y:-800px;
+}
+.bank-icon-hxb{
+	background-image: url(../img/bankFlags/hxb.png)!important;
+}
+/*光大银行*/
+.bank-guangda{
+    background-position-y:-650px;
+}
+.bank-icon-guangda{
+	background-image: url(../img/bankFlags/guangda.png)!important;
+}
+/*其他银行*/
+.bank-icon-other{
+	background-image: url(../img/bankFlags/other.png)!important;
+}
+/*上海银行*/
+.bank-bos{
+    background-position-y:-950px;
+}
+/*厦门银行*/
+.bank-icon-xmyh{
+    background-image: url(../img/bankFlags/xmyh.png)!important;
+}
+.bank-icon-bos{
+	background-image: url(../img/bankFlags/bos.png)!important;
+}
+/*浙商银行*/
+.bank-czsb{
+    background-position-y:-1000px;
+}
+.bank-icon-czsb{
+	background-image: url(../img/bankFlags/czsb.png)!important;
+}
+/*杭州银行*/
+.bank-hzbank{
+    background-position-y:-900px;
+}
+.bank-icon-hzbank{
+	background-image: url(../img/bankFlags/hzbank.png)!important;
+}
+/*广州银行*/
+.bank-gzbank{
+    
+}
+.bank-icon-gzbank{
+	background-image: url(../img/bankFlags/gzbank.png)!important;
+}
+.bank-default{
+    background-position-y:-2000px;
+}
+.bank-icon-default{
+    background-image: url(../img/bankFlags/other.png)!important;
+}
+.has-bank-icon-left{
+    padding-left:1.7em;
+    position:relative;
+}
+.has-bank-icon-left [class^="bank-icon-"]{
+    left:0;
+}
+/*银行样式 end*/

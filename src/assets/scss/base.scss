@@ -1,0 +1,37 @@
+@import "index";
+@import "iconfont";
+*{
+  margin:0;
+  padding:0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+html{
+  height: 100%;
+}
+body{
+  font-family: "Microsoft YaHei","微软雅黑",tahoma,arial,'Hiragino Sans GB',sans-serif;
+  height: 100%;
+  font-size: px2rem(36);
+}
+@for $i from 1 through 20{
+  .mt-#{$i*5}{
+    margin-top: $i*.2rem !important;
+  }
+  .mb-#{$i*5}{
+    margin-bottom: $i*.2rem !important;
+  }
+  .w-#{$i*5}{
+    margin: 0 auto;
+    width: percentage($i*5/100) !important;
+  }
+}
+.txt-primary{color: $primary}
+.float-r{float: right}
+.float-l{float: left}
+.t-a-l{text-align: left}
+.t-a-r{text-align: right}
+.t-a-c{text-align: center}
+.hide {display: none !important;}
