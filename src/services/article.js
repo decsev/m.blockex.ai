@@ -1,18 +1,20 @@
-import { resolveParam, request, config } from '../utils';
+import { request, config } from '../utils';
 
-const { pageSize } = config;
+const { api } = config;
 
-export function getCmsData({ url }) {
-    return request(url);
-}
-
-export function getExitProjectData(values) {
-    return request('url', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: values,
+/**
+ * mock: /api/list
+ * @export
+ * @returns
+ */
+export function getList() {
+    return request(api.articleList, {
+        method: 'GET',
     });
 }
 
+export function getDetail() {
+    return request('/api/detail', {
+        method: 'GET',
+    });
+}

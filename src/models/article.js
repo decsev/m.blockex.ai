@@ -1,36 +1,43 @@
-import * as forumService from '../services/article';
+import * as articleServices from '../services/article';
 
 export default {
     namespace: 'article',
     state: {
-
+        lists: [],
     },
     reducers: {
-        save(state, action) {
+        updataList(state, action) {
+            const { payload } = action.payload;
+            const listArr = state.lists.concat(payload.lists);
             return {
                 ...state,
-                ...action.payload,
+                lists: listArr,
             };
         },
     },
     effects: {
-        *reload(action, { put }) {
-            const { payload } = action;
-            if (payload.isPageChange) {
-                yield put({ type: 'initState' });
+        *getList(action, { call, put, select }) {
+            const { pageIndex } = action.payload;
+            const { data } = yield call(articleServices.getList, {});
+            if (data.code === 0) {
+                const payload = data;
+                console.log('payload', payload);
+                yield put({ type: 'updataList', payload });
+            } else {
+                throw data;
             }
-            yield put({ type: 'getForumInfo', payload });
-            yield put({ type: 'getForumList', payload });
-            yield put({ type: 'getTopArticle', payload });
         },
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
             return history.listen(({ pathname }) => {
-                if (pathname.indexOf('/forum/') === 0 || 1) {
-
-                }
+                dispatch({
+                    type: 'getList',
+                    payload: {
+                        pageIndex: 1,
+                    },
+                });
             });
         },
     },

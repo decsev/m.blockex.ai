@@ -7,10 +7,16 @@ html, body {
     background-color: #fff;
 }
 .article-box{
-    padding-top: p2r(100);
     position: absolute;
-    top:0;
+    top:p2r(32);
     left:0;
     right: 0;
     bottom:0;
+    .bobox{
+        height: 100%;
+        .loadingTips{
+            text-align: center;
+            font-size: p2r(12);
+        }
+    }
 }

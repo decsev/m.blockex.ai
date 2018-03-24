@@ -48,7 +48,8 @@
     "import/no-unresolved": [0],
     "require-yield": [1],
     "max-len":[0],
-    "class-methods-use-this": [0]
+    "class-methods-use-this": [0],
+    "no-return-assign": [ 2, "except-parens" ] 
   },
   "parserOptions": {
     "ecmaFeatures": {

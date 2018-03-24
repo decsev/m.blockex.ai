@@ -7,18 +7,13 @@
     left: 0;
     top:0;
     right:0;
-    .header_banner{
-        height: p2r(50);
-        img{
-            width: 100%;
-            height: p2r(50);
-        }
-    }
     .top_menu_bar{
         width: 100%;
         background: #f4f5f6;
         height: p2r(32);
+        overflow-y: hidden;
         .top_menu_list{
+            font-size: p2r(16);
             overflow: hidden;
             overflow-x: scroll;
             -webkit-overflow-scrolling: touch;

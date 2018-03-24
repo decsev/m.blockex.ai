@@ -1,7 +1,7 @@
 const h5Host = '/';
 const pcHost = '/';
 const isDebug = false;
-const APIV1 = '/api/v1';
+const APIV1 = '/api-v1';
 
 module.exports = {
     name: 'phx',
@@ -13,7 +13,7 @@ module.exports = {
         pageEnd: '已经到底啦~',
     },
     api: {
-        articleList: `${APIV1}/articleList`,
+        articleList: `${APIV1}/api/news/mindex`,
         articleDetail: `${APIV1}/articleDetail`,
     },
     menu: [

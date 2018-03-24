@@ -1,7 +1,7 @@
 export default {
     "entry": "src/index.js",
     "disableCSSModules": true,
-    "hash": true,
+    "hash": false,
     "theme": {
         "@primary-color": "#1DA57A",
         "@link-color": "#1DA57A",
@@ -28,10 +28,10 @@ export default {
         }
     },
     "proxy": {
-        // "/api/v1/*": {
-        //     "target": "/",
-        //     "changeOrigin": true,
-        //     "pathRewrite": { "^/api/v1": "" }
-        // },
+        "/api-v1/*": {
+            "target": "http://b.phix.cn",
+            "changeOrigin": true,
+            "pathRewrite": { "^/api-v1": "" }
+        },
     }
 }

@@ -1,43 +1,41 @@
-import queryString from 'query-string';
-import { config, trackPageView } from '../utils';
-import shareImg from '../assets/img/share-logo.png';
-import * as forumDetailService from '../services/forumdetail';
-import * as userOperationService from '../services/userOperation';
-import * as collectService from '../services/collect';
+import * as articleServices from '../services/article';
 
 export default {
     namespace: 'articleDetail',
     state: {
-
+        data: {},
     },
     reducers: {
-
+        updataDetail(state, action) {
+            const { payload } = action.payload;
+            return {
+                ...state,
+                data: payload.data,
+            };
+        },
     },
     effects: {
-        /**
-         * 删除收藏
-         *
-         * @param {any} action
-         * @param {any} { call }
-         * @returns
-         */
-        *removeFavoriteItem(action, { call, put }) {
-            const { favId } = action.payload;
-            const res = yield call(collectService.removeFavorite, { favId });
-            yield put({
-                type: 'saveFav',
-                payload: {
-                    favFlag: false,
-                },
-            });
-            return res;
+        *getDetail(action, { call, put, select }) {
+            const { pageIndex } = action.payload;
+            const { data } = yield call(articleServices.getDetail, {});
+            if (data.code === 0) {
+                const payload = data;
+                yield put({ type: 'updataDetail', payload });
+            } else {
+                throw data;
+            }
         },
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-            return history.listen(({ pathname, search }) => {
-                console.log('detail', pathname);
+            return history.listen(({ pathname }) => {
+                dispatch({
+                    type: 'getDetail',
+                    payload: {
+                        pageIndex: 1,
+                    },
+                });
             });
         },
     },
