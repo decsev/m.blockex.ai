@@ -30,3 +30,34 @@ html, body {
     left: 0px;
     width: 358px;
 }
+.liveRow{
+    padding: p2r(7);
+    font-size: p2r(12);
+    line-height: p2r(20);
+    .liveRowHeader{
+        color:#33a3f4;
+    }
+    .liveRowBody{
+        h4{
+            margin:0;
+            padding:p2r(5) 0;
+            font-weight: normal;
+            color:#333;
+            line-height: 1;
+        }
+        border-top: 1px solid #ccc;
+        padding: p2r(7) 0;
+        color:#666;
+    }
+    .liveRowFooter{
+        color:#999;
+        font-size: p2r(12);
+        line-height: p2r(12);
+        .good{
+            color:red;
+        }
+        .bad{
+            color: green;
+        }
+    }
+}

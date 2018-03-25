@@ -7,8 +7,8 @@ export default {
     },
     reducers: {
         updataList(state, action) {
-            const { payload } = action.payload;
-            const listArr = state.lists.concat(payload.lists);
+            const { payload } = action;
+            const listArr = state.lists.concat(payload.list);
             return {
                 ...state,
                 lists: listArr,
@@ -19,7 +19,8 @@ export default {
         *getList(action, { call, put, select }) {
             const { pageIndex } = action.payload;
             const { data } = yield call(liveServices.getList, {});
-            if (data.code === 0) {
+
+            if (data.code === 200) {
                 const payload = data;
                 console.log('payload', payload);
                 yield put({ type: 'updataList', payload });

@@ -8,6 +8,7 @@ import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
 import Menu from '../../components/Menu';
 import './index.scss';
+import '../../assets/font/iconfont.css';
 
 const findDomNode = ReactDOM.findDOMNode;
 /**
@@ -108,23 +109,22 @@ class Live extends Component {
     renderRow = (rowData) => {
         return (
             <Hammer onTap={() => { this.goToDetail(rowData); }} key={shortid.generate()}>
-                <div>
-                    <Card full>
-                        <Card.Header
-                            title={<div className="nick-name">{rowData.id + rowData.title}</div>}
-                            thumb={<div><img src={rowData.img} alt="" /></div>}
-                            extra={<span>{rowData.title}</span>}
-                        />
-                        <Card.Body>
-                            <div>
-                                <h4>{rowData.title}</h4>
-                                <p>{rowData.des}</p>
-                            </div>
-                        </Card.Body>
-                        <Card.Footer
-                            content={<div><span><i className="pyicon icon-view" /> {rowData.readCount || 0}</span> <span> <i className="pyicon icon-comments" /> {rowData.commentCount || 0}</span></div>}
-                        />
-                    </Card>
+                <div className="liveRow">
+                    <div className="liveRowHeader"><i className="iconfont dataTime">&#xe808;</i>2018年3月2日</div>
+                    <div className="liveRowBody">
+                        <h4>{rowData.update_time}</h4>
+                        {rowData.content}
+                    </div>
+                    <div className="liveRowFooter">
+                        <span className="good">
+                            <i className="iconfont">&#xe668;</i>
+                            看涨（{rowData.good}）
+                        </span>
+                        <span className="bad">
+                            <i className="iconfont">&#xe608;</i>
+                            看跌（{rowData.bad}）
+                        </span>
+                    </div>
                 </div>
             </Hammer>
         );
