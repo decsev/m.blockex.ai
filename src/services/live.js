@@ -8,7 +8,7 @@ const { api } = config;
  * @returns
  */
 export function getList() {
-    return request('/api/list', {
+    return request(api.articleList, {
         method: 'GET',
     });
 }

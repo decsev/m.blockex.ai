@@ -16,7 +16,9 @@ function RouterConfig({ history, app }) {
         component: () => import('./routes/article'),
     }, {
         path: '/live',
-        models: () => [],
+        models: () => [
+            import('./models/live'),
+        ],
         component: () => import('./routes/live'),
     }, {
         path: '/quotation',
