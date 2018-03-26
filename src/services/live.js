@@ -7,8 +7,10 @@ const { api } = config;
  * @export
  * @returns
  */
-export function getList() {
-    return request(api.articleList, {
+export function getList(opt) {
+    console.log('opt', opt);
+    const ts = opt.timestamp ? `?timestamp=${opt.timestamp}` : '';
+    return request(api.articleList + ts, {
         method: 'GET',
     });
 }

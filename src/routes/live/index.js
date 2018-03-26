@@ -6,11 +6,14 @@ import _ from 'lodash';
 import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, ActivityIndicator } from 'antd-mobile';
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
+import { Func } from '../../utils';
 import Menu from '../../components/Menu';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
+const { formatDateTime, dateStr } = Func;
 const findDomNode = ReactDOM.findDOMNode;
+let dayDate;
 /**
  * @description 列表页
  * @author fengzl
@@ -79,10 +82,15 @@ class Live extends Component {
      * @description 获取列表数据
      * @param {any} page
      */
-    getData = (page) => {
+    getData = () => {
+        const { live } = this.props;
+        const lastTimsTamp = live.lists[live.lists.length - 1].update_time;
+        console.log(lastTimsTamp);
         this.dispatch({
             type: 'live/getList',
-            payload: {},
+            payload: {
+                timestamp: lastTimsTamp,
+            },
         }).then(() => {
             this.setState({
                 isLoading: false,
@@ -107,12 +115,21 @@ class Live extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
+        let showDayTime;
+        const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
+        const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd hh:mm');
+        if (dateTime !== dayDate) {
+            dayDate = dateTime;
+            showDayTime = true;
+        } else {
+            showDayTime = false;
+        }
         return (
             <Hammer onTap={() => { this.goToDetail(rowData); }} key={shortid.generate()}>
                 <div className="liveRow">
-                    <div className="liveRowHeader"><i className="iconfont dataTime">&#xe808;</i>2018年3月2日</div>
+                    {showDayTime && <div className="liveRowHeader"><i className="iconfont dataTime">&#xe808;</i>{dateTime}</div>}
                     <div className="liveRowBody">
-                        <h4>{rowData.update_time}</h4>
+                        <h4>{minTime}</h4>
                         {rowData.content}
                     </div>
                     <div className="liveRowFooter">
@@ -132,10 +149,8 @@ class Live extends Component {
 
     render() {
         const { history, live } = this.props;
-        console.log(this.props);
         const { lists } = live;
         this.dataSource = this.dataSource.cloneWithRows(lists);
-        console.log('isLoading', this.state.isLoading);
         return (
             <div className="article-box">
                 <div className="bobox">

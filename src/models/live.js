@@ -17,8 +17,9 @@ export default {
     },
     effects: {
         *getList(action, { call, put, select }) {
-            const { pageIndex } = action.payload;
-            const { data } = yield call(liveServices.getList, {});
+            // const { timestamp } = action.payload;
+            console.log('7', action.payload);
+            const { data } = yield call(liveServices.getList, action.payload);
 
             if (data.code === 200) {
                 const payload = data;
@@ -35,9 +36,7 @@ export default {
             return history.listen(({ pathname }) => {
                 dispatch({
                     type: 'getList',
-                    payload: {
-                        pageIndex: 1,
-                    },
+                    payload: {},
                 });
             });
         },

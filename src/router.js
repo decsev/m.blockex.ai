@@ -28,6 +28,14 @@ function RouterConfig({ history, app }) {
         path: '/user',
         models: () => [],
         component: () => import('./routes/user'),
+    }, {
+        path: '/login',
+        models: () => [],
+        component: () => import('./routes/user/login'),
+    }, {
+        path: '/register',
+        models: () => [],
+        component: () => import('./routes/user/register'),
     }];
     const mySingleRoute = [{
         path: '/articleDetail/:articleId',
