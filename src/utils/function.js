@@ -152,6 +152,17 @@ const Func = {
             return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
         }
     },
+    obj2search(o){
+        let str = '';
+        if(JSON.stringify(o) === '{}'){
+            return str;
+        } else {
+            for(let key in o){
+                str += (str===''? `${key}=${o[key]}` : `&${key}=${o[key]}`);
+            }
+            return str;
+        }
+    }
 };
 (function () {
     window.Func = Func;

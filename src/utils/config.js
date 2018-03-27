@@ -1,7 +1,8 @@
 const h5Host = '/';
 const pcHost = '/';
 const isDebug = false;
-const APIV1 = '/api-v1';
+// const APIV1 = '/api-v1';
+const APIV1 = '';
 
 module.exports = {
     name: 'phx',

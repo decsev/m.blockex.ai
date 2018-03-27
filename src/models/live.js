@@ -4,14 +4,34 @@ export default {
     namespace: 'live',
     state: {
         lists: [],
+        liveState: {
+            newNum: null,
+            hasMoreOld: true,
+        },
     },
     reducers: {
-        updataList(state, action) {
+        updateListPush(state, action) {
             const { payload } = action;
             const listArr = state.lists.concat(payload.list);
             return {
                 ...state,
                 lists: listArr,
+            };
+        },
+        updateListUnshift(state, action) {
+            const { payload } = action;
+            const listArr = payload.list.concat(state.lists);
+            return {
+                ...state,
+                lists: listArr,
+                ...payload.liveState,
+            };
+        },
+        updateState(state, { payload }) {
+            console.log(852, payload);
+            return {
+                ...state,
+                ...payload,
             };
         },
     },
@@ -23,8 +43,29 @@ export default {
 
             if (data.code === 200) {
                 const payload = data;
-                console.log('payload', payload);
-                yield put({ type: 'updataList', payload });
+                if (action.payload.last === 1) {
+                    if (payload.list.length > 0) {
+                        yield put({ type: 'updateListUnshift', payload }); // 添加到开头
+                        const { liveState } = yield select(state => state.live);
+                        liveState.newNum = payload.list.length + 1;
+                        yield put({ type: 'updateState', liveState });
+                    } else {
+                        const { liveState } = yield select(state => state.live);
+                        liveState.newNum = 0;
+                        yield put({ type: 'updateState', liveState });
+                    }
+                } else if (action.payload.last !== 1) {
+                    if (payload.list.length > 0) {
+                        yield put({ type: 'updateListPush', payload }); // 追加到尾部
+                        const { liveState } = yield select(state => state.live);
+                        // liveState.hasMoreOld = false;
+                        // yield put({ type: 'updateState', liveState });
+                    } else {
+                        const { liveState } = yield select(state => state.live);
+                        liveState.hasMoreOld = false;
+                        yield put({ type: 'updateState', liveState });
+                    }
+                }
             } else {
                 throw data;
             }

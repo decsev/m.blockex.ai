@@ -62,9 +62,15 @@ class Live extends Component {
      * @returns
      */
     onRefresh = () => {
+        const { live } = this.props;
+        const lastTimsTamp = live.lists[0].update_time;
+        console.log(lastTimsTamp);
         this.dispatch({
             type: 'live/getList',
-            payload: {},
+            payload: {
+                timestamp: lastTimsTamp,
+                last: 1,
+            },
         });
     };
     /**
@@ -72,6 +78,12 @@ class Live extends Component {
      * @returns
      */
     onEndReached = () => {
+        const { live } = this.props;
+        const { liveState, lists } = live;
+        const { hasMoreOld } = liveState;
+        if (!hasMoreOld) {
+            return;
+        }
         this.setState({
             isLoading: true,
         });
@@ -84,8 +96,10 @@ class Live extends Component {
      */
     getData = () => {
         const { live } = this.props;
-        const lastTimsTamp = live.lists[live.lists.length - 1].update_time;
-        console.log(lastTimsTamp);
+        const { liveState, lists } = live;
+        const { hasMoreOld } = liveState;
+        const lastTimsTamp = lists[lists.length - 1].update_time;
+        console.log('liveState', liveState);
         this.dispatch({
             type: 'live/getList',
             payload: {
@@ -115,6 +129,7 @@ class Live extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
+        console.log(1, dayDate);
         let showDayTime;
         const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
         const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd hh:mm');
@@ -129,17 +144,17 @@ class Live extends Component {
                 <div className="liveRow">
                     {showDayTime && <div className="liveRowHeader"><i className="iconfont dataTime">&#xe808;</i>{dateTime}</div>}
                     <div className="liveRowBody">
-                        <h4>{minTime}</h4>
+                        <h4>({rowData.id}){minTime} {rowData.title}</h4>
                         {rowData.content}
                     </div>
                     <div className="liveRowFooter">
                         <span className="good">
                             <i className="iconfont">&#xe668;</i>
-                            看涨（{rowData.good}）
+                            看多（{rowData.good}）
                         </span>
                         <span className="bad">
                             <i className="iconfont">&#xe608;</i>
-                            看跌（{rowData.bad}）
+                            看空（{rowData.bad}）
                         </span>
                     </div>
                 </div>
@@ -147,7 +162,30 @@ class Live extends Component {
         );
     };
 
+    /**
+     * 渲染ListView底部
+     *
+     * @memberof Forum
+     */
+    renderFooter = () => {
+        const { live } = this.props;
+        const { liveState, lists } = live;
+        const { hasMoreOld } = liveState;
+        return (
+            <div style={{ padding: 10, fontSize: '12px', textAlign: 'center' }}>
+                {this.state.isLoading ?
+                    <Flex justify="center" className="loading-box">
+                        <ActivityIndicator
+                            text="加载中..."
+                        />
+                    </Flex> :
+                    hasMoreOld ? '上拉加载更多' : '没有更多数据了'}
+            </div>
+        );
+    }
+
     render() {
+        dayDate = null;
         const { history, live } = this.props;
         const { lists } = live;
         this.dataSource = this.dataSource.cloneWithRows(lists);
@@ -159,11 +197,7 @@ class Live extends Component {
                         key={this.state.useBodyScroll ? '0' : '1'}
                         ref={(el) => { this.lv = el; }}
                         dataSource={this.dataSource}
-                        renderFooter={() => (
-                            <div className="loadingTips">
-                                {this.state.isLoading ? '已完成加载' : '加载中...'}
-                            </div>
-                        )}
+                        renderFooter={this.renderFooter}
                         renderRow={this.renderRow}
                         useBodyScroll={false}
                         style={this.state.useBodyScroll ? {} : {
