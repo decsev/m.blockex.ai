@@ -1,34 +1,34 @@
+import { Toast } from 'antd-mobile';
 import * as liveServices from '../services/live';
+import { config } from '../utils';
 
+
+const { pageSize } = config;
 export default {
     namespace: 'live',
     state: {
         lists: [],
-        liveState: {
+        ajaxState: {
             newNum: null,
             hasMoreOld: true,
         },
     },
     reducers: {
-        updateListPush(state, action) {
-            const { payload } = action;
-            const listArr = state.lists.concat(payload.list);
+        updateListPush(state, { payload }) {
+            const listArr = state.lists.concat(payload);
             return {
                 ...state,
                 lists: listArr,
             };
         },
-        updateListUnshift(state, action) {
-            const { payload } = action;
-            const listArr = payload.list.concat(state.lists);
+        updateListUnshift(state, {  payload }) {
+            const listArr = payload.concat(state.lists);
             return {
                 ...state,
                 lists: listArr,
-                ...payload.liveState,
             };
         },
         updateState(state, { payload }) {
-            console.log(852, payload);
             return {
                 ...state,
                 ...payload,
@@ -36,34 +36,27 @@ export default {
         },
     },
     effects: {
-        *getList(action, { call, put, select }) {
-            // const { timestamp } = action.payload;
-            console.log('7', action.payload);
-            const { data } = yield call(liveServices.getList, action.payload);
-
+        *getList({ payload }, { call, put, select }) {
+            const { ajaxState, lists } = yield select(state => state.live);
+            if (lists.length > 0 && payload.timestamp === undefined) {
+                return;
+            }
+            const { data } = yield call(liveServices.getList, payload);
             if (data.code === 200) {
-                const payload = data;
-                if (action.payload.last === 1) {
-                    if (payload.list.length > 0) {
-                        yield put({ type: 'updateListUnshift', payload }); // 添加到开头
-                        const { liveState } = yield select(state => state.live);
-                        liveState.newNum = payload.list.length + 1;
-                        yield put({ type: 'updateState', liveState });
+                const list = data.payload.data;
+
+                if (payload.last === 1) {
+                    yield put({ type: 'updateListUnshift', payload: list }); // 添加到开头
+
+                    ajaxState.newNum = list.length;
+                    Toast.info(list.length > 0 ? `为您拉取了${list.length}条数据` : '暂无更新数据', 2, null, false);
+                    yield put({ type: 'updateState', ajaxState });
+                } else if (payload.last !== 1) {
+                    if (list.length > 0) {
+                        yield put({ type: 'updateListPush', payload: list }); // 追加到尾部
                     } else {
-                        const { liveState } = yield select(state => state.live);
-                        liveState.newNum = 0;
-                        yield put({ type: 'updateState', liveState });
-                    }
-                } else if (action.payload.last !== 1) {
-                    if (payload.list.length > 0) {
-                        yield put({ type: 'updateListPush', payload }); // 追加到尾部
-                        const { liveState } = yield select(state => state.live);
-                        // liveState.hasMoreOld = false;
-                        // yield put({ type: 'updateState', liveState });
-                    } else {
-                        const { liveState } = yield select(state => state.live);
-                        liveState.hasMoreOld = false;
-                        yield put({ type: 'updateState', liveState });
+                        ajaxState.hasMoreOld = false;
+                        yield put({ type: 'updateState', ajaxState });
                     }
                 }
             } else {
@@ -77,7 +70,9 @@ export default {
             return history.listen(({ pathname }) => {
                 dispatch({
                     type: 'getList',
-                    payload: {},
+                    payload: {
+                        size: pageSize,
+                    },
                 });
             });
         },

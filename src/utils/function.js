@@ -152,6 +152,12 @@ const Func = {
             return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
         }
     },
+    /**
+     * 对象转url search
+     * 
+     * @param {any} o {key:val,key1:val1}
+     * @returns 
+     */
     obj2search(o){
         let str = '';
         if(JSON.stringify(o) === '{}'){
@@ -162,7 +168,18 @@ const Func = {
             }
             return str;
         }
-    }
+    },
+    /**
+     * 获取hash中指定的某个参数值
+     * 
+     * @param {any} o {key:val,key1:val1}
+     * @returns 
+     */
+    getQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.hash.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    },
 };
 (function () {
     window.Func = Func;

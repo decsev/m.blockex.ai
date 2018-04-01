@@ -53,7 +53,7 @@ class Layout extends Component {
                             key="live"
                             selected={query.type === 'live'}
                             onPress={() => {
-                                this.goPage('/live?type=live');
+                                this.goPage('/live?type=live&cat=1');
                             }}
                             data-seed="live"
                         >

@@ -6,12 +6,14 @@ import _ from 'lodash';
 import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, ActivityIndicator } from 'antd-mobile';
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
-import { Func } from '../../utils';
+import { Func, config } from '../../utils';
+
 import Menu from '../../components/Menu';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
 const { formatDateTime, dateStr } = Func;
+const { pageSize } = config;
 const findDomNode = ReactDOM.findDOMNode;
 let dayDate;
 /**
@@ -36,9 +38,7 @@ class Live extends Component {
     }
 
     componentDidMount() {
-        // const hei = document.documentElement.clientHeight - findDomNode(this.lv).parentNode.offsetTop;
         const hei = findDomNode(this.lv).parentNode.offsetHeight;
-        console.log('hei:', hei);
         setTimeout(() => {
             this.setState({
                 height: hei,
@@ -47,15 +47,16 @@ class Live extends Component {
 
         const scrollY = sessionStorage.getItem('articleListScroll');
         if (scrollY) {
-            this.lv.scrollTo(0, scrollY);
+            // this.lv.scrollTo(0, scrollY);
+            console.log('scrollY', scrollY);
             // setTimeout(() => this.lv.scrollTo(0, scrollY), 800);
         }
     }
 
+
     componentWillReceiveProps(nextProps) {
 
     }
-
 
     /**
      * @description 下拉刷新
@@ -64,7 +65,6 @@ class Live extends Component {
     onRefresh = () => {
         const { live } = this.props;
         const lastTimsTamp = live.lists[0].update_time;
-        console.log(lastTimsTamp);
         this.dispatch({
             type: 'live/getList',
             payload: {
@@ -79,9 +79,9 @@ class Live extends Component {
      */
     onEndReached = () => {
         const { live } = this.props;
-        const { liveState, lists } = live;
-        const { hasMoreOld } = liveState;
-        if (!hasMoreOld) {
+        const { ajaxState, lists } = live;
+        const { hasMoreOld } = ajaxState;
+        if (!hasMoreOld || this.state.isLoading) {
             return;
         }
         this.setState({
@@ -96,10 +96,9 @@ class Live extends Component {
      */
     getData = () => {
         const { live } = this.props;
-        const { liveState, lists } = live;
-        const { hasMoreOld } = liveState;
+        const { ajaxState, lists } = live;
+        const { hasMoreOld } = ajaxState;
         const lastTimsTamp = lists[lists.length - 1].update_time;
-        console.log('liveState', liveState);
         this.dispatch({
             type: 'live/getList',
             payload: {
@@ -115,11 +114,9 @@ class Live extends Component {
     handleScroll = () => {
         const scrollY = findDomNode(this.lv).scrollTop || findDomNode(this.lv).scrollTop || findDomNode(this.lv).pageYOffset || 0;
         sessionStorage.setItem('articleListScroll', scrollY);
-        console.log('滑动距离：', scrollY);
     }
     goToDetail = (data) => {
         const articleId = data.id;
-        console.log('articleId', articleId);
         this.dispatch(routerRedux.push(`/articleDetail/${articleId}`));
     }
 
@@ -129,7 +126,6 @@ class Live extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
-        console.log(1, dayDate);
         let showDayTime;
         const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
         const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd hh:mm');
@@ -169,8 +165,8 @@ class Live extends Component {
      */
     renderFooter = () => {
         const { live } = this.props;
-        const { liveState, lists } = live;
-        const { hasMoreOld } = liveState;
+        const { ajaxState, lists } = live;
+        const { hasMoreOld } = ajaxState;
         return (
             <div style={{ padding: 10, fontSize: '12px', textAlign: 'center' }}>
                 {this.state.isLoading ?
@@ -185,6 +181,7 @@ class Live extends Component {
     }
 
     render() {
+        console.log('rending');
         dayDate = null;
         const { history, live } = this.props;
         const { lists } = live;
@@ -209,8 +206,10 @@ class Live extends Component {
                             onRefresh={this.onRefresh}
                         />}
                         onEndReached={this.onEndReached}
-                        pageSize={5}
+                        pageSize={pageSize}
                         onScroll={this.handleScroll}
+                        initialListSize={pageSize * 2}
+                        scrollRenderAheadDistance={10}
                     />
                 </div>
             </div>

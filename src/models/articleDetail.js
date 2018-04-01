@@ -17,13 +17,13 @@ export default {
     effects: {
         *getDetail(action, { call, put, select }) {
             const { pageIndex } = action.payload;
-            const { data } = yield call(articleServices.getDetail, {});
-            if (data.code === 0) {
-                const payload = data;
-                yield put({ type: 'updataDetail', payload });
-            } else {
-                throw data;
-            }
+            // const { data } = yield call(articleServices.getDetail, {});
+            // if (data.code === 0) {
+            //     const payload = data;
+            //     yield put({ type: 'updataDetail', payload });
+            // } else {
+            //     throw data;
+            // }
         },
     },
 
