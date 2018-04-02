@@ -28,13 +28,13 @@ class Live extends Component {
         this.state = {
             isLoading: false,
             height: document.documentElement.clientHeight * 3 / 4,
+            newLiveTips: null,
         };
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
         });
         this.dataSource = ds.cloneWithRows([]);
         this.dispatch = this.props.dispatch;
-        console.log(this.props.params);
     }
 
     componentDidMount() {
@@ -45,11 +45,9 @@ class Live extends Component {
             });
         }, 600);
 
-        const scrollY = sessionStorage.getItem('articleListScroll');
+        const scrollY = sessionStorage.getItem('liveListScroll');
         if (scrollY) {
-            // this.lv.scrollTo(0, scrollY);
-            console.log('scrollY', scrollY);
-            // setTimeout(() => this.lv.scrollTo(0, scrollY), 800);
+            this.lv.scrollTo(0, scrollY);
         }
     }
 
@@ -58,19 +56,36 @@ class Live extends Component {
 
     }
 
+    componentWillUnmount() {
+        this.handleScroll();
+    }
     /**
      * @description 下拉刷新
      * @returns
      */
     onRefresh = () => {
         const { live } = this.props;
-        const lastTimsTamp = live.lists[0].update_time;
+        const lastTimsTamp = !!live.lists[0] ? live.lists[0].update_time : null;
+        if (lastTimsTamp === null) return;
         this.dispatch({
             type: 'live/getList',
             payload: {
                 timestamp: lastTimsTamp,
                 last: 1,
             },
+        }).then((result) => {
+            let msg = '出现末知错误';
+            if (result === 0) {
+                msg = '暂时没有新的快讯';
+            } else if (result > 0) {
+                msg = `${result}条新快讯`;
+            }
+            setTimeout(() => {
+                this.setState({ newLiveTips: msg });
+                setTimeout(() => {
+                    this.setState({ newLiveTips: null });
+                }, 2000);
+            }, 1000);
         });
     };
     /**
@@ -113,7 +128,7 @@ class Live extends Component {
 
     handleScroll = () => {
         const scrollY = findDomNode(this.lv).scrollTop || findDomNode(this.lv).scrollTop || findDomNode(this.lv).pageYOffset || 0;
-        sessionStorage.setItem('articleListScroll', scrollY);
+        sessionStorage.setItem('liveListScroll', scrollY);
     }
     goToDetail = (data) => {
         const articleId = data.id;
@@ -126,31 +141,28 @@ class Live extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
-        let showDayTime;
-        const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
-        const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd hh:mm');
-        if (dateTime !== dayDate) {
-            dayDate = dateTime;
-            showDayTime = true;
-        } else {
-            showDayTime = false;
-        }
+        // let showDayTime;
+        // const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
+        const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'MM月dd日 hh:mm');
+        // if (dateTime !== dayDate) {
+        //     dayDate = dateTime;
+        //     showDayTime = true;
+        // } else {
+        //     showDayTime = false;
+        // }
         return (
             <Hammer onTap={() => { this.goToDetail(rowData); }} key={shortid.generate()}>
                 <div className="liveRow">
-                    {showDayTime && <div className="liveRowHeader"><i className="iconfont dataTime">&#xe808;</i>{dateTime}</div>}
+                    <div className="liveRowHeader"><i className="dataTimeIcon" /><span className="dataTime">{minTime}</span></div>
                     <div className="liveRowBody">
-                        <h4>({rowData.id}){minTime} {rowData.title}</h4>
-                        {rowData.content}
+                        <p>{rowData.description}</p>
                     </div>
                     <div className="liveRowFooter">
-                        <span className="good">
-                            <i className="iconfont">&#xe668;</i>
-                            看多（{rowData.good}）
+                        <span className="goodBadWp good">
+                            看多{rowData.good}
                         </span>
-                        <span className="bad">
-                            <i className="iconfont">&#xe608;</i>
-                            看空（{rowData.bad}）
+                        <span className="goodBadWp bad">
+                            看空{rowData.bad}
                         </span>
                     </div>
                 </div>
@@ -168,7 +180,7 @@ class Live extends Component {
         const { ajaxState, lists } = live;
         const { hasMoreOld } = ajaxState;
         return (
-            <div style={{ padding: 10, fontSize: '12px', textAlign: 'center' }}>
+            <div className="footerTips">
                 {this.state.isLoading ?
                     <Flex justify="center" className="loading-box">
                         <ActivityIndicator
@@ -181,14 +193,14 @@ class Live extends Component {
     }
 
     render() {
-        console.log('rending');
         dayDate = null;
         const { history, live } = this.props;
         const { lists } = live;
         this.dataSource = this.dataSource.cloneWithRows(lists);
         return (
-            <div className="article-box">
+            <div className="live-box">
                 <div className="bobox">
+                    {!!this.state.newLiveTips && <div className="newLiveTips">{this.state.newLiveTips}</div>}
                     {/* history.location.pathname */}
                     <ListView
                         key={this.state.useBodyScroll ? '0' : '1'}
@@ -207,8 +219,7 @@ class Live extends Component {
                         />}
                         onEndReached={this.onEndReached}
                         pageSize={pageSize}
-                        onScroll={this.handleScroll}
-                        initialListSize={pageSize * 2}
+                        initialListSize={pageSize * 100}
                         scrollRenderAheadDistance={10}
                     />
                 </div>

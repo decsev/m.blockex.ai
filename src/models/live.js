@@ -1,4 +1,3 @@
-import { Toast } from 'antd-mobile';
 import * as liveServices from '../services/live';
 import { config } from '../utils';
 
@@ -41,16 +40,17 @@ export default {
             if (lists.length > 0 && payload.timestamp === undefined) {
                 return;
             }
+            // debugger;
             const { data } = yield call(liveServices.getList, payload);
-            if (data.code === 200) {
+            if (data.code === 0) {
                 const list = data.payload.data;
 
                 if (payload.last === 1) {
                     yield put({ type: 'updateListUnshift', payload: list }); // 添加到开头
 
                     ajaxState.newNum = list.length;
-                    Toast.info(list.length > 0 ? `为您拉取了${list.length}条数据` : '暂无更新数据', 2, null, false);
                     yield put({ type: 'updateState', ajaxState });
+                    return Number(list.length);
                 } else if (payload.last !== 1) {
                     if (list.length > 0) {
                         yield put({ type: 'updateListPush', payload: list }); // 追加到尾部

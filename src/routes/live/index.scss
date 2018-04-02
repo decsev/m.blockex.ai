@@ -1,21 +1,35 @@
 @import 'global';
+@import 'base';
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: #ddd;
 }
-.article-box{
+
+.live-box{
     position: absolute;
     top:0;
     bottom:0;
     width: 100%;
     .bobox{
         height: 100%;
+        position: relative;
         .loadingTips{
             text-align: center;
             font-size: p2r(12);
+        }
+        .newLiveTips{
+            position: absolute;
+            top:0;
+            width: 100%;
+            text-align: center;
+            font-size: p2r(12);
+            line-height: p2r(30);
+            background-color: #d0e8fa;
+            color: #0061d6;
+            z-index: 999;
         }
     }
 }
@@ -31,13 +45,35 @@ html, body {
     width: 358px;
 }
 .liveRow{
-    padding: p2r(7);
+    padding: 0 p2r(20) p2r(20) p2r(30);
     font-size: p2r(12);
     line-height: p2r(20);
+    background: url(../../../public/static/img/line.jpg) p2r(18) top repeat-y;
     .liveRowHeader{
-        color:#33a3f4;
+        position: relative;
+        height: p2r(14);
+        .dataTimeIcon{
+            position: absolute;
+            left: 0;
+            width: p2r(14);
+            height: p2r(14);
+            display: block;
+            background-image: url(../../../public/static/img/circle.png);
+            background-size: 100%;
+            background-repeat: no-repeat;
+            margin-left: p2r(-18);
+            color:#33a3f4;
+        }
+        .dataTime{
+            color: #999;
+            font-size: p2r(11);
+            line-height: p2r(14);
+            position: absolute;
+            top:2px;
+        }
     }
     .liveRowBody{
+        padding: p2r(10) 0;
         h4{
             margin:0;
             padding:p2r(5) 0;
@@ -45,19 +81,45 @@ html, body {
             color:#333;
             line-height: 1;
         }
-        border-top: 1px solid #ccc;
-        padding: p2r(7) 0;
         color:#666;
+        p{
+            color: #666;
+            font-size: p2r(14);
+            line-height: 1.5;
+        }
     }
     .liveRowFooter{
+        vertical-align: text-bottom;
         color:#999;
-        font-size: p2r(12);
-        line-height: p2r(12);
+        
+        .goodBadWp{
+            height: p2r(20);
+            border-radius: p2r(10);
+            padding:0 p2r(10);
+            font-size: p2r(10);
+            line-height: p2r(20);
+            display: inline-block;
+        }
         .good{
-            color:red;
+            border:1px solid #f44336;
+            color:#f44336;
+            margin-right: p2r(10);
         }
         .bad{
-            color: green;
+            border:1px solid #4caf50;
+            color:#4caf50;
         }
     }
+}
+
+.list-view-section-body{
+    padding-top:p2r(20);
+}
+.am-list-footer{
+    background: #ddd;
+    font-size: p2r(12);
+    color: #666;
+}
+.footerTips{
+    text-align: center;
 }

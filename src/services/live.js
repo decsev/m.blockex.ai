@@ -11,7 +11,6 @@ export function getList(opt) {
     // const ts = opt.timestamp ? `?timestamp=${opt.timestamp}` : '';
     const searchKey = Func.obj2search(opt);
     const ts = searchKey === '' ? '' : `?${searchKey}`;
-    console.log('ts:', ts);
     return request(api.articleList + ts, {
         method: 'GET',
     });
