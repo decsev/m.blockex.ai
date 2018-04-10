@@ -1,7 +1,7 @@
 import * as liveServices from '../services/live';
-import { config } from '../utils';
+import { config, Func } from '../utils';
 
-
+const { getObjIndexInArrary } = Func;
 const { pageSize } = config;
 export default {
     namespace: 'live',
@@ -40,8 +40,20 @@ export default {
             if (lists.length > 0 && payload.timestamp === undefined) {
                 return;
             }
+            let notice = null;
+            if (lists.length === 0 && payload.timestamp === undefined) {
+                // 显示loading
+                notice = window.$(document).dialog({
+                    type: 'notice',
+                    infoIcon: './static/img/icon/loading.gif',
+                    infoText: '正在加载中',
+                    overlayShow: false,
+                });
+            }
             // debugger;
             const { data } = yield call(liveServices.getList, payload);
+            // 隐藏loading
+            notice && notice.close();
             if (data.code === 0) {
                 const list = data.payload.data;
 
@@ -63,17 +75,96 @@ export default {
                 throw data;
             }
         },
+        *judge({ payload }, { call, put, select }) {
+            const { id, isMore } = payload;
+            const liveLists = yield select(state => state.live.lists);
+            const _index = getObjIndexInArrary(liveLists, 'id', id);
+            let data = null;
+            if (!!isMore) {
+                // 看多
+                if (!!liveLists[_index].addedMore) {
+                    // 看多减1
+                    const params = {
+                        doc_id: id,
+                        bull: 'good',
+                        dir: 'down',
+                    };
+                    data = yield call(liveServices.judge, params);
+                } else {
+                    // 看多加1
+                    // 看多减1
+                    const params = {
+                        doc_id: id,
+                        bull: 'good',
+                        dir: 'up',
+                    };
+                    data = yield call(liveServices.judge, params);
+                }
+                if (data.data.code === 0) {
+                    const paramsAssign = {};
+                    if (!!liveLists[_index].addedMore) {
+                        paramsAssign.good = --liveLists[_index].good;
+                    } else {
+                        paramsAssign.good = ++liveLists[_index].good;
+                    }
+                    paramsAssign.addedMore = !liveLists[_index].addedMore;
+                    liveLists[_index] = Object.assign(liveLists[_index], paramsAssign);
+                    yield put({
+                        type: 'updateState',
+                        payload: liveLists,
+                    });
+                } else {
+                    throw data.data;
+                }
+            } else {
+                // 看空
+                if (!!liveLists[_index].addedEmpty) {
+                    // 看空减1
+                    const params = {
+                        doc_id: id,
+                        bull: 'bad',
+                        dir: 'down',
+                    };
+                    data = yield call(liveServices.judge, params);
+                } else {
+                    // 看空加1
+                    // 看空减1
+                    const params = {
+                        doc_id: id,
+                        bull: 'bad',
+                        dir: 'up',
+                    };
+                    data = yield call(liveServices.judge, params);
+                }
+                if (data.data.code === 0) {
+                    if (!!liveLists[_index].addedEmpty) {
+                        liveLists[_index].bad = --liveLists[_index].bad;
+                    } else {
+                        liveLists[_index].bad = ++liveLists[_index].bad;
+                    }
+                    liveLists[_index].addedEmpty = !liveLists[_index].addedEmpty;
+                    yield put({
+                        type: 'updateState',
+                        payload: liveLists,
+                    });
+                } else {
+                    throw data.data;
+                }
+            }
+        },
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
             return history.listen(({ pathname }) => {
-                dispatch({
-                    type: 'getList',
-                    payload: {
-                        size: pageSize,
-                    },
-                });
+                if (pathname === '/live') {
+                    dispatch({
+                        type: 'getList',
+                        payload: {
+                            size: pageSize,
+                        },
+                    });
+                }
             });
         },
     },

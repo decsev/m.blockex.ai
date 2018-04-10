@@ -180,6 +180,21 @@ const Func = {
         var r = window.location.hash.substr(1).match(reg);
         if(r!=null)return  unescape(r[2]); return null;
     },
+    /**
+     * 通过数组对象属性值获取该对象在数组中的index
+     * @param 
+     * @returns 
+     */
+    getObjIndexInArrary(Arr, key, val){
+        let index = -1;
+        if(Arr.length === 0) return index;
+        for(let i=0; i < Arr.length; i++){
+            if(Arr[i][key] === val){
+                index = i;
+            }
+        }
+        return index;        
+    },
 };
 (function () {
     window.Func = Func;

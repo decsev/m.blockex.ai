@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, Switch, Redirect } from 'dva/router';
 import dynamic from 'dva/dynamic';
 import shortid from 'shortid';
+import { defaultCategoryId } from './utils/config';
 import IndexPage from './routes/IndexPage';
 import Layout from './routes/layout';
 import App from './routes/test';
@@ -11,7 +12,7 @@ function RouterConfig({ history, app }) {
         path: '/article/:channel',
         models: () => [
             import('./models/article'),
-            import('./models/menu'),
+            // import('./models/menu'),
         ],
         component: () => import('./routes/article'),
     }, {
@@ -44,11 +45,12 @@ function RouterConfig({ history, app }) {
         ],
         component: () => import('./routes/articleDetail'),
     }];
+    const redirectUrl = `/article/${defaultCategoryId}?type=news&id=${defaultCategoryId}`;
     return (
         <Router history={history}>
             <Switch>
                 {/* <Route path="/" exact component={App} /> */}
-                <Redirect exact from="/" to="/article/1?type=news" />
+                <Redirect exact from="/" to={redirectUrl} />
                 {
                     mySingleRoute.map(({ path, ...dynamics }) => (
                         <Route

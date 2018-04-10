@@ -27,14 +27,12 @@ function genData(pIndex = 0) {
     for (let i = 0; i < NUM_ROWS; i++) {
         dataArr.push(`row - ${(pIndex * NUM_ROWS) + i}`);
     }
-    console.log('dataArr', dataArr);
     return dataArr;
 }
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-        // console.log('ListView:', ListView);
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,
         });
@@ -59,7 +57,7 @@ class App extends React.Component {
 
 
     componentDidMount() {
-        setTimeout(() => { this.lv.scrollTo(0, 500); console.log(666); }, 2000);
+        setTimeout(() => { this.lv.scrollTo(0, 500); }, 2000);
         const hei = this.state.height;// - this.lv.offsetTop;
 
         setTimeout(() => {
@@ -140,7 +138,7 @@ class App extends React.Component {
                     >
                         {obj.title}
                     </div>
-                    <div style={{ display: '-webkit-box', display: 'flex', padding: '15px' }}>
+                    <div style={{ display: 'flex', padding: '15px' }}>
                         <img style={{ height: '63px', width: '63px', marginRight: '15px' }} src={obj.img} alt="" />
                         <div style={{ display: 'inline-block' }}>
                             <div style={{
@@ -183,7 +181,6 @@ class App extends React.Component {
                     />}
                     onEndReached={this.onEndReached}
                     pageSize={5}
-                    onScroll={(e, ee) => console.log(e.target.scrollTop)}
                 />
             </div>);
     }

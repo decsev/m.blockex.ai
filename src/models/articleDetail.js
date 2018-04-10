@@ -3,39 +3,47 @@ import * as articleServices from '../services/article';
 export default {
     namespace: 'articleDetail',
     state: {
-        data: {},
     },
     reducers: {
-        updataDetail(state, action) {
-            const { payload } = action.payload;
+        updataDetail(state, { payload }) {
             return {
                 ...state,
-                data: payload.data,
+                ...payload,
             };
         },
     },
     effects: {
-        *getDetail(action, { call, put, select }) {
-            const { pageIndex } = action.payload;
-            // const { data } = yield call(articleServices.getDetail, {});
-            // if (data.code === 0) {
-            //     const payload = data;
-            //     yield put({ type: 'updataDetail', payload });
-            // } else {
-            //     throw data;
-            // }
+        *getDetail({ payload }, { call, put, select }) {
+            const notice = window.$(document).dialog({
+                type: 'notice',
+                infoIcon: './static/img/icon/loading.gif',
+                infoText: '正在加载中',
+                overlayShow: false,
+            });
+            const { data } = yield call(articleServices.getArticleDetail, payload);
+            notice.close();
+            if (data.code === 0) {
+                const datas = data.payload.data;
+                yield put({ type: 'updataDetail', payload: datas });
+            } else {
+                throw data;
+            }
         },
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
             return history.listen(({ pathname }) => {
-                dispatch({
-                    type: 'getDetail',
-                    payload: {
-                        pageIndex: 1,
-                    },
-                });
+                const reg = /^\/articleDetail\/(\d*)$/g;
+                if (reg.test(pathname)) {
+                    const articleId = pathname.replace(reg, '$1');
+                    dispatch({
+                        type: 'getDetail',
+                        payload: {
+                            id: articleId,
+                        },
+                    });
+                }
             });
         },
     },

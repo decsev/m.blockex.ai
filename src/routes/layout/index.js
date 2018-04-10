@@ -3,10 +3,12 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { TabBar } from 'antd-mobile';
 import queryString from 'query-string';
+import { config } from '../../utils';
 import HeaderBanner from '../../components/HeaderBanner';
 import styles from './index.scss';
 import '../../assets/font/iconfont.css';
 
+const { defaultCategoryId } = config;
 
 class Layout extends Component {
     constructor(props) {
@@ -40,7 +42,7 @@ class Layout extends Component {
                             selectedIcon={<i className="iconfont selected">&#xe65f;</i>}
                             selected={query.type === 'news'}
                             onPress={() => {
-                                this.goPage('/article/1?type=news');
+                                this.goPage(`/article/${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}?type=news&id=${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}`);
                             }}
                             data-seed="news"
                         >
@@ -58,19 +60,6 @@ class Layout extends Component {
                             data-seed="live"
                         >
                             {query.type === 'live' ? this.props.children : null}
-                        </TabBar.Item>
-                        <TabBar.Item
-                            icon={<i className="iconfont">&#xe648;</i>}
-                            selectedIcon={<i className="iconfont selected">&#xe648;</i>}
-                            title="行情"
-                            key="quotation"
-                            selected={query.type === 'quotation'}
-                            onPress={() => {
-                                this.goPage('/quotation?type=quotation');
-                            }}
-                            data-seed="quotation"
-                        >
-                            {query.type === 'quotation' ? this.props.children : null}
                         </TabBar.Item>
                         <TabBar.Item
                             icon={<i className="iconfont">&#xe727;</i>}

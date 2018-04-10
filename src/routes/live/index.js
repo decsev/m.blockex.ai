@@ -7,15 +7,12 @@ import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, Ac
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
 import { Func, config } from '../../utils';
-
-import Menu from '../../components/Menu';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
 const { formatDateTime, dateStr } = Func;
 const { pageSize } = config;
 const findDomNode = ReactDOM.findDOMNode;
-let dayDate;
 /**
  * @description 列表页
  * @author fengzl
@@ -31,12 +28,14 @@ class Live extends Component {
             newLiveTips: null,
         };
         const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2,
+            rowHasChanged: (r1, r2) => {
+                return true;
+                // return r1 !== r2;
+            },
         });
         this.dataSource = ds.cloneWithRows([]);
         this.dispatch = this.props.dispatch;
     }
-
     componentDidMount() {
         const hei = findDomNode(this.lv).parentNode.offsetHeight;
         setTimeout(() => {
@@ -131,8 +130,19 @@ class Live extends Component {
         sessionStorage.setItem('liveListScroll', scrollY);
     }
     goToDetail = (data) => {
-        const articleId = data.id;
-        this.dispatch(routerRedux.push(`/articleDetail/${articleId}`));
+        return false;
+        // const articleId = data.id;
+        // this.dispatch(routerRedux.push(`/articleDetail/${articleId}`));
+    }
+
+    judge = (id, isMore) => {
+        this.dispatch({
+            type: 'live/judge',
+            payload: {
+                id,
+                isMore,
+            },
+        });
     }
 
     /**
@@ -141,15 +151,8 @@ class Live extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
-        // let showDayTime;
         // const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
         const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'MM月dd日 hh:mm');
-        // if (dateTime !== dayDate) {
-        //     dayDate = dateTime;
-        //     showDayTime = true;
-        // } else {
-        //     showDayTime = false;
-        // }
         return (
             <Hammer onTap={() => { this.goToDetail(rowData); }} key={shortid.generate()}>
                 <div className="liveRow">
@@ -158,12 +161,16 @@ class Live extends Component {
                         <p>{rowData.description}</p>
                     </div>
                     <div className="liveRowFooter">
-                        <span className="goodBadWp good">
+                        <Hammer onTap={() => { this.judge(rowData.id, 1); }}>
+                            <span className="goodBadWp good">
                             看多{rowData.good}
-                        </span>
-                        <span className="goodBadWp bad">
+                            </span>
+                        </Hammer>
+                        <Hammer onTap={() => { this.judge(rowData.id, 0); }}>
+                            <span className="goodBadWp bad">
                             看空{rowData.bad}
-                        </span>
+                            </span>
+                        </Hammer>
                     </div>
                 </div>
             </Hammer>
@@ -193,7 +200,6 @@ class Live extends Component {
     }
 
     render() {
-        dayDate = null;
         const { history, live } = this.props;
         const { lists } = live;
         this.dataSource = this.dataSource.cloneWithRows(lists);

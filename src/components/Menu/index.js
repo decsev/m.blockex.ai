@@ -49,14 +49,24 @@ class Menu extends Component {
             this.lv.scrollLeft = canScrollWidth;
         }
     }
+    oddEvent(match, location) {
+        if (!match) {
+            return false;
+        }
+        const reg = /^\/article\/(\d*)$/g;
+        const channelId = location.pathname.replace(reg, '$1');
+        sessionStorage.setItem('currentCategoryId', channelId);
+        return true;
+    }
     render() {
         const { menus } = this.props;
+        const itemRoute = '/article/';
         return (
             <div className="header">
                 <HeaderBanner />
                 <div className="top_menu_bar">
                     <div className="top_menu_list" ref={(el) => { this.lv = el; }}>
-                        { menus && menus.map((item, index) => <NavLink to={{ pathname: item.route + item.id, search: '?type=news' }} key={shortid.generate()}>{item.name}</NavLink>)}
+                        { menus && menus.map((item, index) => <NavLink to={{ pathname: itemRoute + item.id, search: `?type=news&id=${item.id}` }} key={shortid.generate()} isActive={this.oddEvent}>{item.title}</NavLink>)}
                     </div>
                 </div>
             </div>

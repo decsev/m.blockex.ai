@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "set DISABLE_ESLINT=1 && roadhog server",
-    "build": "roadhog build",
+    "start": "set DISABLE_ESLINT=1 COMPRESS=none && roadhog server",
+    "build": "COMPRESS=none roadhog build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
   },

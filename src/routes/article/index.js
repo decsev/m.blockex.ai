@@ -6,9 +6,13 @@ import _ from 'lodash';
 import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, ActivityIndicator } from 'antd-mobile';
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
+import { Func, config } from '../../utils';
 import Menu from '../../components/Menu';
 import './index.scss';
+import '../../assets/font/iconfont.css';
 
+const { formatDateTime, dateStr, getQueryString } = Func;
+const { pageSize } = config;
 const findDomNode = ReactDOM.findDOMNode;
 /**
  * @description 列表页
@@ -22,33 +26,51 @@ class Article extends Component {
         this.state = {
             isLoading: false,
             height: document.documentElement.clientHeight * 3 / 4,
+            newArticleTips: null,
         };
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
         });
         this.dataSource = ds.cloneWithRows([]);
         this.dispatch = this.props.dispatch;
-        console.log(this.props.params);
     }
-
     componentDidMount() {
-        // const hei = document.documentElement.clientHeight - findDomNode(this.lv).parentNode.offsetTop;
         const hei = findDomNode(this.lv).parentNode.offsetHeight;
-        console.log('hei:', hei);
         setTimeout(() => {
             this.setState({
                 height: hei,
             });
         }, 600);
 
-        const scrollY = sessionStorage.getItem('articleListScroll');
+        const acId = getQueryString('id');
+        const scrollY = sessionStorage.getItem(`articleListScroll_${acId}`);
         if (scrollY) {
-            this.lv.scrollTo(0, scrollY);
-            // setTimeout(() => this.lv.scrollTo(0, scrollY), 800);
+            setTimeout(() => {
+                this.lv.scrollTo(0, scrollY);
+            }, 100);
         }
+        console.log(12);
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.match.params.channel !== this.props.match.params.channel) {
+            const acId = getQueryString('id');
+            const scrollY = sessionStorage.getItem(`articleListScroll_${acId}`);
+            if (scrollY) {
+                setTimeout(() => {
+                    this.lv.scrollTo(0, scrollY);
+                }, 100);
+            }
+            console.log(22);
+        }
+    }
+    componentDidUpdate() {
+        const channel = this.props.match.params.channel || null;
+        if (channel !== null) {
+            sessionStorage.setItem('currentCategoryId', channel);
+        }
+    }
+    componentWillUnmount() {
 
     }
 
@@ -58,9 +80,29 @@ class Article extends Component {
      * @returns
      */
     onRefresh = () => {
+        const { article } = this.props;
+        const acId = getQueryString('id');
         this.dispatch({
             type: 'article/getList',
-            payload: {},
+            payload: {
+                cat_id: acId,
+                size: pageSize,
+                p: 1,
+            },
+        }).then((result) => {
+            let msg = '出现末知错误';
+            if (result.code === 0) {
+                msg = '刷新成功';
+            }
+            if (result.payload.data.length === 0) {
+                msg = '暂无数据';
+            }
+            setTimeout(() => {
+                this.setState({ newArticleTips: msg });
+                setTimeout(() => {
+                    this.setState({ newArticleTips: null });
+                }, 2000);
+            }, 1000);
         });
     };
     /**
@@ -68,6 +110,12 @@ class Article extends Component {
      * @returns
      */
     onEndReached = () => {
+        const acId = getQueryString('id');
+        const { article } = this.props;
+        const hasMoreOld = article[`hasMoreOld_${acId}`] || true;
+        if (!hasMoreOld || this.state.isLoading) {
+            return;
+        }
         this.setState({
             isLoading: true,
         });
@@ -78,10 +126,15 @@ class Article extends Component {
      * @description 获取列表数据
      * @param {any} page
      */
-    getData = (page) => {
+    getData = () => {
+        const { article } = this.props;
+        const acId = getQueryString('id');
         this.dispatch({
             type: 'article/getList',
-            payload: {},
+            payload: {
+                cat_id: acId,
+                size: pageSize,
+            },
         }).then(() => {
             this.setState({
                 isLoading: false,
@@ -90,14 +143,25 @@ class Article extends Component {
     }
 
     handleScroll = () => {
+        const acId = getQueryString('id');
         const scrollY = findDomNode(this.lv).scrollTop || findDomNode(this.lv).scrollTop || findDomNode(this.lv).pageYOffset || 0;
-        sessionStorage.setItem('articleListScroll', scrollY);
-        console.log('滑动距离：', scrollY);
+        sessionStorage.setItem(`articleListScroll_${acId}`, scrollY);
     }
     goToDetail = (data) => {
         const articleId = data.id;
-        console.log('articleId', articleId);
         this.dispatch(routerRedux.push(`/articleDetail/${articleId}`));
+    }
+
+    goToRecorded = () => {
+        // debugger;
+        const { menus } = this.props.article;
+        let recordedUrl = null;
+        if (sessionStorage.getItem('currentCategoryId')) {
+            recordedUrl = `/article/${sessionStorage.getItem('currentCategoryId')}?type=news`;
+        } else {
+            recordedUrl = (menus !== null ? `/article/${menus[0].id}?type=news` : null);
+        }
+        recordedUrl !== null && this.dispatch(routerRedux.push(recordedUrl));
     }
 
     /**
@@ -106,49 +170,62 @@ class Article extends Component {
      * @memberof
      */
     renderRow = (rowData) => {
+        // const dateTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd');
+        const minTime = formatDateTime(new Date(rowData.update_time * 1000), 'yyyy-MM-dd hh:mm');
         return (
             <Hammer onTap={() => { this.goToDetail(rowData); }} key={shortid.generate()}>
-                <div>
-                    <Card full>
-                        <Card.Header
-                            title={<div className="nick-name">{rowData.id + rowData.title}</div>}
-                            thumb={<div><img src={rowData.img} alt="" /></div>}
-                            extra={<span>{rowData.title}</span>}
-                        />
-                        <Card.Body>
-                            <div>
-                                <h4>{rowData.title}</h4>
-                                <p>{rowData.des}</p>
-                            </div>
-                        </Card.Body>
-                        <Card.Footer
-                            content={<div><span><i className="pyicon icon-view" /> {rowData.readCount || 0}</span> <span> <i className="pyicon icon-comments" /> {rowData.commentCount || 0}</span></div>}
-                        />
-                    </Card>
+                <div className="articleRow">
+                    <div className="articleRowHeader">{rowData.title}</div>
+                    <div className="articleRowBody">
+                        <img src={rowData.path} alt="" />
+                        <p>{rowData.description}</p>
+                    </div>
+                    <div className="articleRowFooter">
+                        {minTime}{rowData.source ? ` · ${rowData.source}` : null}
+                    </div>
                 </div>
             </Hammer>
         );
     };
 
+    /**
+     * 渲染ListView底部
+     *
+     * @memberof Forum
+     */
+    renderFooter = () => {
+        const { article } = this.props;
+        const acId = getQueryString('id');
+        const hasMoreOld = !!article[`hasMoreOld_${acId}`];
+        return (
+            <div className="footerTips">
+                {this.state.isLoading ?
+                    <Flex justify="center" className="loading-box">
+                        <ActivityIndicator
+                            text="加载中..."
+                        />
+                    </Flex> :
+                    hasMoreOld ? '上拉加载更多' : '没有更多数据了'}
+            </div>
+        );
+    }
+
     render() {
-        const { history, menus, article } = this.props;
-        const { lists } = article;
+        const { history, article } = this.props;
+        const { menus } = article;
+        const lists = article[`lists_${getQueryString('id')}`] || [];
         this.dataSource = this.dataSource.cloneWithRows(lists);
-        console.log('isLoading', this.state.isLoading);
         return (
             <div className="article-box">
-                <Menu cur={history.location.pathname} menus={menus} />
+                <Menu menus={menus} />
                 <div className="bobox">
+                    {!!this.state.newArticleTips && <div className="newArticleTips">{this.state.newArticleTips}</div>}
                     {/* history.location.pathname */}
                     <ListView
                         key={this.state.useBodyScroll ? '0' : '1'}
                         ref={(el) => { this.lv = el; }}
                         dataSource={this.dataSource}
-                        renderFooter={() => (
-                            <div className="loadingTips">
-                                {this.state.isLoading ? '已完成加载' : '加载中...'}
-                            </div>
-                        )}
+                        renderFooter={this.renderFooter}
                         renderRow={this.renderRow}
                         useBodyScroll={false}
                         style={this.state.useBodyScroll ? {} : {
@@ -160,7 +237,9 @@ class Article extends Component {
                             onRefresh={this.onRefresh}
                         />}
                         onEndReached={this.onEndReached}
-                        pageSize={5}
+                        pageSize={pageSize}
+                        initialListSize={pageSize * 100}
+                        scrollRenderAheadDistance={10}
                         onScroll={this.handleScroll}
                     />
                 </div>
@@ -172,7 +251,7 @@ class Article extends Component {
 function mapStateToProps(state) {
     return {
         article: state.article,
-        menus: state.menu.menus,
+        // menus: state.menu.menus,
     };
 }
 

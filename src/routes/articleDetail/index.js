@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { Func } from '../../utils';
 import styles from './index.scss';
+
+const { formatDateTime, dateStr, getQueryString } = Func;
 
 class ArticleDetail extends Component {
     constructor(props) {
@@ -11,11 +14,16 @@ class ArticleDetail extends Component {
     }
 
     render() {
-        const { data } = this.props.articleDetail;
+        const data = this.props.articleDetail;
+        if (JSON.stringify(data) === '{}' || !data) {
+            return null;
+        }
         return (
-            <div style={{ padding: '10px' }}>
-                <h2>({data.id}): {data.title}</h2>
-                <p>{data.content}</p>
+            <div className="articleDetailWp">
+                <div className="title">{data.title}</div>
+                <div className="subTitle">{formatDateTime(new Date(data.create_time  * 1000), 'yyyy-MM-dd hh:mm:ss')}</div>
+                <div className="description" dangerouslySetInnerHTML={{ __html: data.description }} />
+                <div className="content"  dangerouslySetInnerHTML={{ __html: data.content }} />
             </div>
         );
     }

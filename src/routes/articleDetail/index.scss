@@ -1,1 +1,31 @@
 @import 'global';
+
+.articleDetailWp{
+    padding:p2r(10);
+    background: #fff;
+    .title{
+        font-size: p2r(16);
+        text-align: center;
+        padding:p2r(15) 0;
+        font-weight: bold;
+        color: #333;
+    }
+    .subTitle{
+        font-size: 11px;
+        color:#999;
+        text-align: center;
+        padding-bottom:p2r(15);
+    }
+    .description{
+        font-size: p2r(12);
+        color:#666;
+        line-height: p2r(22);
+    }
+    .content{
+        font-size: p2r(14);
+        line-height: p2r(24);
+        img{
+            width: 100%;
+        }
+    }
+}

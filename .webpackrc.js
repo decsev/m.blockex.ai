@@ -1,5 +1,6 @@
 export default {
     "entry": "src/index.js",
+    "outputPath": "./wx",
     "disableCSSModules": true,
     "hash": false,
     "theme": {
@@ -28,10 +29,10 @@ export default {
         }
     },
     "proxy": {
-        "/api-v1/*": {
-            "target": "http://b.phix.cn",
+        "/api/*": {
+            "target": "http://www.phix.cn",
             "changeOrigin": true,
-            "pathRewrite": { "^/api-v1": "" }
+            "pathRewrite": { "^/api": "/api" }
         },
     }
 }

@@ -1,8 +1,10 @@
 @import 'global';
 .header_banner{
-    height: p2r(50);
+    /*height: p2r(50);*/
+    background-color: #ddd;
     img{
         width: 100%;
-        height: p2r(50);
+        height: 100%;
+        /*height: p2r(50);*/
     }
 }

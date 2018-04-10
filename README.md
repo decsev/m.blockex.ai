@@ -31,7 +31,7 @@ $ cnpm i
 ### 部署
 
 ```bash
-把构建项目生成的dist文件夹上传到服务器
+把构建项目生成的wx文件夹上传到服务器
 ```
 
 
@@ -45,7 +45,16 @@ $ npm start
 
 - 2、构建项目
 ```bash
+### 打包时注意修改utils/config.js 配置 defaultCategoryId
 $ npm run build
+```
+
+## 与git配合的开发流程
+```bash
+1. 修改src中代码 
+2. npm run start 开始本地调试看效果
+3. 确认ok后 npm run build 生成wx代码
+4. git ci  & git ps 提交代码
 ```
 
 ## 目录结构
