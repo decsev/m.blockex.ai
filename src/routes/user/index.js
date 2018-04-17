@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import Hammer from 'react-hammerjs';
+import shortid from 'shortid';
 import queryString from 'query-string';
 import { List } from 'antd-mobile';
 import './index.scss';
@@ -11,6 +13,7 @@ class IndexPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            online: String(sessionStorage.getItem('_token')),
         };
         this.dispatch = this.props.dispatch;
     }
@@ -22,20 +25,33 @@ class IndexPage extends Component {
         const { location } = this.props;
         const pathName = this.props.location.pathname;
         const query = queryString.parse(this.props.location.search);
+        let userInfo = null;
+        if (this.state.online !== 'null') {
+            userInfo = (
+                <Hammer onTap={() => { sessionStorage.setItem('_token', null); this.setState({ online: 'null' });  }} key={shortid.generate()}>
+                    <p><span>已登陆，退出登陆</span></p>
+                </Hammer>
+            );
+        } else {
+            userInfo = (
+                <div>
+                    <Hammer onTap={() => { this.goPage('/login?type=user&returl=/#/user?type=user'); }} key={shortid.generate()}>
+                        <p><b>未登录</b></p>
+                    </Hammer>
+                    <p><span>还没有数字财经账号</span></p>
+                    <Hammer onTap={() => { this.goPage('/register?type=user'); }} key={shortid.generate()}>
+                        <p><b>快速注册</b></p>
+                    </Hammer>
+                </div>
+            );
+        }
         return (
             <div>
                 <div
                     className="user-info"
-                    onClick={() => {
-                        const url = '/login?type=user';
-                        this.goPage(url);
-                    }}
-                    onKeyPress={this.handleKeyPress}
                 >
                     <img src="https://avatars1.githubusercontent.com/u/6941888?s=460&v=4" alt="" />
-                    <p><b>未登录</b></p>
-                    <p><span>还没有数字财经账号</span></p>
-                    <p><b>快速注册</b></p>
+                    {userInfo}
                 </div>
                 <div>
                     <List className="user-list">

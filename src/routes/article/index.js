@@ -49,7 +49,6 @@ class Article extends Component {
                 this.lv.scrollTo(0, scrollY);
             }, 100);
         }
-        console.log(12);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -61,7 +60,6 @@ class Article extends Component {
                     this.lv.scrollTo(0, scrollY);
                 }, 100);
             }
-            console.log(22);
         }
     }
     componentDidUpdate() {
@@ -177,8 +175,10 @@ class Article extends Component {
                 <div className="articleRow">
                     <div className="articleRowHeader">{rowData.title}</div>
                     <div className="articleRowBody">
+                        <div className="des">
+                            <p>{rowData.description}</p>
+                        </div>
                         <img src={rowData.path} alt="" />
-                        <p>{rowData.description}</p>
                     </div>
                     <div className="articleRowFooter">
                         {minTime}{rowData.source ? ` · ${rowData.source}` : null}
@@ -210,6 +210,15 @@ class Article extends Component {
         );
     }
 
+    renderHeader = () => {
+        return null;
+        // if (!!this.state.newArticleTips) {
+        //     return (<div className="newArticleTips">{this.state.newArticleTips}</div>);
+        // } else {
+        //     return null;
+        // }
+    }
+
     render() {
         const { history, article } = this.props;
         const { menus } = article;
@@ -225,6 +234,7 @@ class Article extends Component {
                         key={this.state.useBodyScroll ? '0' : '1'}
                         ref={(el) => { this.lv = el; }}
                         dataSource={this.dataSource}
+                        renderHeader={this.renderHeader}
                         renderFooter={this.renderFooter}
                         renderRow={this.renderRow}
                         useBodyScroll={false}

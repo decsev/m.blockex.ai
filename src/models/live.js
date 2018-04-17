@@ -51,10 +51,10 @@ export default {
                 });
             }
             // debugger;
-            const { data } = yield call(liveServices.getList, payload);
+            const data = yield call(liveServices.getList, payload);
             // 隐藏loading
             notice && notice.close();
-            if (data.code === 0) {
+            if (data.success) {
                 const list = data.payload.data;
 
                 if (payload.last === 1) {
@@ -100,7 +100,7 @@ export default {
                     };
                     data = yield call(liveServices.judge, params);
                 }
-                if (data.data.code === 0) {
+                if (data.success) {
                     const paramsAssign = {};
                     if (!!liveLists[_index].addedMore) {
                         paramsAssign.good = --liveLists[_index].good;
@@ -114,7 +114,7 @@ export default {
                         payload: liveLists,
                     });
                 } else {
-                    throw data.data;
+                    throw data;
                 }
             } else {
                 // 看空
@@ -136,7 +136,7 @@ export default {
                     };
                     data = yield call(liveServices.judge, params);
                 }
-                if (data.data.code === 0) {
+                if (data.success) {
                     if (!!liveLists[_index].addedEmpty) {
                         liveLists[_index].bad = --liveLists[_index].bad;
                     } else {
@@ -148,7 +148,7 @@ export default {
                         payload: liveLists,
                     });
                 } else {
-                    throw data.data;
+                    throw data;
                 }
             }
         },

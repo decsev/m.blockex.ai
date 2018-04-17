@@ -27,15 +27,21 @@ function RouterConfig({ history, app }) {
         component: () => import('./routes/quotation'),
     }, {
         path: '/user',
-        models: () => [],
+        models: () => [
+            import('./models/user'),
+        ],
         component: () => import('./routes/user'),
     }, {
         path: '/login',
-        models: () => [],
+        models: () => [
+            import('./models/user'),
+        ],
         component: () => import('./routes/user/login'),
     }, {
         path: '/register',
-        models: () => [],
+        models: () => [
+            import('./models/user'),
+        ],
         component: () => import('./routes/user/register'),
     }];
     const mySingleRoute = [{

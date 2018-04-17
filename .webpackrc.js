@@ -29,10 +29,15 @@ export default {
         }
     },
     "proxy": {
-        "/api/*": {
+        "/api/v1/*": {
             "target": "http://www.phix.cn",
             "changeOrigin": true,
-            "pathRewrite": { "^/api": "/api" }
+            "pathRewrite": { "^/api/v1": "" }
         },
+        "/api/v2/*": {
+            "target": "http://api.phix.cn",
+            "changeOrigin": true,
+            "pathRewrite": { "^/api/v2" : "" }
+        }
     }
 }

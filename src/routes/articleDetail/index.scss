@@ -1,28 +1,46 @@
 @import 'global';
 
+.navBar{
+    height: p2r(50);
+    background: #108ee9;
+    color:#ffffff;
+    .iconfont{
+        color:#ffffff;
+        line-height: p2r(50);
+        padding:0 p2r(5) 0 p2r(15);
+        font-size: p2r(10);
+    }
+}
 .articleDetailWp{
+    position: absolute;
+    top:p2r(50);
+    bottom:0;
+    left:0;
+    right: 0;
+    overflow-y: scroll;
     padding:p2r(10);
     background: #fff;
     .title{
-        font-size: p2r(16);
+        font-size: p2r(20);
         text-align: center;
         padding:p2r(15) 0;
         font-weight: bold;
         color: #333;
+        line-height: 1.5;
     }
     .subTitle{
-        font-size: 11px;
+        font-size: 12px;
         color:#999;
         text-align: center;
         padding-bottom:p2r(15);
     }
     .description{
-        font-size: p2r(12);
+        font-size: p2r(14);
         color:#666;
         line-height: p2r(22);
     }
     .content{
-        font-size: p2r(14);
+        font-size: p2r(16);
         line-height: p2r(24);
         img{
             width: 100%;

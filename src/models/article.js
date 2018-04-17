@@ -58,10 +58,12 @@ export default {
             if (menus !== null) {
                 return; // 有menus数据的时候不请求
             }
-            const { data } = yield call(articleServices.getArticleCategory);
-            if (data.code === 0) {
+            const data = yield call(articleServices.getArticleCategory);
+            if (data.success) {
                 const menuArr = data.payload.data;
                 yield put({ type: 'setMenus', payload: { menus: menuArr } });
+            } else {
+                throw data;
             }
         },
         *getList({ payload }, { call, put, select }) {
@@ -81,34 +83,38 @@ export default {
                     });
                 }
                 payload.p = 1;
-                const { data } = yield call(articleServices.getArticleList, payload);
+                d = yield call(articleServices.getArticleList, payload);
                 notice && notice.close();
-                d = data;
-                if (data.payload.data.length === 0 && noData) {
-                    window.$(document).dialog({
-                        type: 'notice',
-                        infoText: '该分类暂无数据',
-                        autoClose: 3000,
-                        overlayShow: false,
-                    });
-                }
-                if (data.payload.data.length > 0 && payload.p === 1) {
-                    const mparams = {};
-                    mparams[`hasMoreOld_${payload.cat_id}`] = true;
-                    yield put({ type: 'updateState', payload: mparams });
+                if (d.success) {
+                    const data = d;
+                    if (data.payload.data.length === 0 && noData) {
+                        window.$(document).dialog({
+                            type: 'notice',
+                            infoText: '该分类暂无数据',
+                            autoClose: 3000,
+                            overlayShow: false,
+                        });
+                    }
+                    if (data.payload.data.length > 0 && payload.p === 1) {
+                        const mparams = {};
+                        mparams[`hasMoreOld_${payload.cat_id}`] = true;
+                        yield put({ type: 'updateState', payload: mparams });
+                    }
+                } else {
+                    throw d;
                 }
             } else {
                 // 存在数据的时候，追加到数组里，获取p+1
                 payload.p = articleObj[`p_${payload.cat_id}`] + 1;
-                const { data } = yield call(articleServices.getArticleList, payload);
-                d = data;
+                d = yield call(articleServices.getArticleList, payload);
+                const data = d;
                 if (data.payload.data.length === 0) {
                     const mparams = {};
                     mparams[`hasMoreOld_${payload.cat_id}`] = false;
                     yield put({ type: 'updateState', payload: mparams });
                 }
             }
-            if (d.code === 0) {
+            if (d.success) {
                 const params = {};
                 params[`lists_${payload.cat_id}`] = d.payload.data;
                 params[`p_${payload.cat_id}`] = payload.p;

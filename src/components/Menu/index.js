@@ -63,7 +63,6 @@ class Menu extends Component {
         const itemRoute = '/article/';
         return (
             <div className="header">
-                <HeaderBanner />
                 <div className="top_menu_bar">
                     <div className="top_menu_list" ref={(el) => { this.lv = el; }}>
                         { menus && menus.map((item, index) => <NavLink to={{ pathname: itemRoute + item.id, search: `?type=news&id=${item.id}` }} key={shortid.generate()} isActive={this.oddEvent}>{item.title}</NavLink>)}

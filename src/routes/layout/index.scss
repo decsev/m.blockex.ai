@@ -1,6 +1,7 @@
 @import 'global';
 
 .iconfont{
+    font-size: p2r(20) !important;
     &.selected{
         color: #33a3f4;
     }
@@ -11,8 +12,15 @@
     height:100%;
     .layoutTabBarWp{
         position: absolute;
-        top:p2r(50);
+        top:p2r(40);
         width: 100%;
         bottom:0;
+    }
+}
+
+.am-tab-bar-bar{
+    height: 60px !important;
+    .am-tab-bar-tab-title{
+        font-size: p2r(14) !important;
     }
 }

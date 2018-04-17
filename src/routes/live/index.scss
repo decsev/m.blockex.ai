@@ -21,15 +21,12 @@ html, body {
             font-size: p2r(12);
         }
         .newLiveTips{
-            position: absolute;
-            top:0;
             width: 100%;
             text-align: center;
             font-size: p2r(12);
             line-height: p2r(30);
             background-color: #d0e8fa;
             color: #0061d6;
-            z-index: 999;
         }
     }
 }
@@ -83,7 +80,7 @@ html, body {
         }
         color:#666;
         p{
-            color: #666;
+            color: #000;
             font-size: p2r(14);
             line-height: 1.5;
         }

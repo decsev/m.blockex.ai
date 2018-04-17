@@ -3,39 +3,44 @@ import { request, config, Func } from '../utils';
 const { api } = config;
 
 /**
- * mock: /api/list  api.articleList
  * 获取文章列表
  * @export
  * @returns
  */
-export function getArticleList(opt) {
-    const searchKey = Func.obj2search(opt);
+
+export async function getArticleList(params) {
+    const searchKey = Func.obj2query(params);
     const ts = searchKey === '' ? '' : `?${searchKey}`;
-    return request(api.articleList + ts, {
-        method: 'GET',
+    return request({
+        url: api.articleList + ts,
+        method: 'get',
     });
 }
+
 
 /**
  * 获取文章详情
  * @export
  * @returns
  */
-export function getArticleDetail(opt) {
-    const searchKey = Func.obj2search(opt);
+export async function getArticleDetail(params) {
+    const searchKey = Func.obj2query(params);
     const ts = searchKey === '' ? '' : `?${searchKey}`;
-    return request(api.articleDetail + ts, {
-        method: 'GET',
+    return request({
+        url: api.articleDetail + ts,
+        method: 'get',
     });
 }
+
 
 /**
  * 获取文章分类
  * @export
  * @returns
  */
-export function getArticleCategory() {
-    return request(api.articleCategory, {
-        method: 'GET',
+export async function getArticleCategory() {
+    return request({
+        url: api.articleCategory,
+        method: 'get',
     });
 }

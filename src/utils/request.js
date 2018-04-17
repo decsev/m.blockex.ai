@@ -1,3 +1,4 @@
+// 请求使用的库是isomorphic-fetch
 import fetch from 'dva/fetch';
 
 function parseJSON(response) {
@@ -21,8 +22,10 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
+const Token = sessionStorage.getItem('_token') || null;
+const headers = { Token };
 export default function request(url, options) {
-    return fetch(url, options)
+    return fetch(url, { ...options, headers })
         .then(checkStatus)
         .then(parseJSON)
         .then(data => ({ data }))

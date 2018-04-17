@@ -38,8 +38,8 @@ class Layout extends Component {
                         <TabBar.Item
                             title="新闻"
                             key="news"
-                            icon={<i className="iconfont">&#xe65f;</i>}
-                            selectedIcon={<i className="iconfont selected">&#xe65f;</i>}
+                            icon={<i className="iconfont">&#xe612;</i>}
+                            selectedIcon={<i className="iconfont selected">&#xe612;</i>}
                             selected={query.type === 'news'}
                             onPress={() => {
                                 this.goPage(`/article/${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}?type=news&id=${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}`);
@@ -49,8 +49,8 @@ class Layout extends Component {
                             {query.type === 'news' ? this.props.children : null}
                         </TabBar.Item>
                         <TabBar.Item
-                            icon={<i className="iconfont">&#xe6c2;</i>}
-                            selectedIcon={<i className="iconfont selected">&#xe6c2;</i>}
+                            icon={<i className="iconfont">&#xe625;</i>}
+                            selectedIcon={<i className="iconfont selected">&#xe625;</i>}
                             title="快讯"
                             key="live"
                             selected={query.type === 'live'}
@@ -62,8 +62,8 @@ class Layout extends Component {
                             {query.type === 'live' ? this.props.children : null}
                         </TabBar.Item>
                         <TabBar.Item
-                            icon={<i className="iconfont">&#xe727;</i>}
-                            selectedIcon={<i className="iconfont selected">&#xe727;</i>}
+                            icon={<i className="iconfont">&#xe609;</i>}
+                            selectedIcon={<i className="iconfont selected">&#xe609;</i>}
                             title="我的"
                             key="user"
                             selected={query.type === 'user'}

@@ -3,6 +3,18 @@ import * as articleServices from '../services/article';
 export default {
     namespace: 'articleDetail',
     state: {
+        cat_name: '',
+        cat_title: '',
+        category_id: '',
+        content: '',
+        create_time: '',
+        description: '',
+        id: '',
+        nickname: '',
+        source: '',
+        title: '',
+        update_time: '',
+        view: '',
     },
     reducers: {
         updataDetail(state, { payload }) {
@@ -20,9 +32,9 @@ export default {
                 infoText: '正在加载中',
                 overlayShow: false,
             });
-            const { data } = yield call(articleServices.getArticleDetail, payload);
+            const data = yield call(articleServices.getArticleDetail, payload);
             notice.close();
-            if (data.code === 0) {
+            if (data.success) {
                 const datas = data.payload.data;
                 yield put({ type: 'updataDetail', payload: datas });
             } else {

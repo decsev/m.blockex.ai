@@ -158,7 +158,7 @@ const Func = {
      * @param {any} o {key:val,key1:val1}
      * @returns 
      */
-    obj2search(o){
+    obj2query(o){
         let str = '';
         if(JSON.stringify(o) === '{}'){
             return str;

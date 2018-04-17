@@ -2,18 +2,13 @@
 .header{
     box-sizing: border-box;
     width: 100%;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top:0;
-    right:0;
     .top_menu_bar{
         width: 100%;
         background: #f4f5f6;
-        height: p2r(32);
+        height: p2r(38);
         overflow-y: hidden;
         .top_menu_list{
-            font-size: p2r(16);
+            font-size: p2r(18);
             overflow: hidden;
             overflow-x: scroll;
             -webkit-overflow-scrolling: touch;
@@ -25,10 +20,11 @@
                 white-space: nowrap;
                 color: #505050;
                 display: inline-block;
-                height: p2r(32);
-                line-height: p2r(32);
-                padding:0 p2r(10);
+                height: p2r(38);
+                line-height: p2r(38);
+                padding:0 p2r(12);
                 -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+                font-weight: 500;
                 &.active{
                     color: red;
                 }
