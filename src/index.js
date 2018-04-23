@@ -2,8 +2,6 @@ import '@babel/polyfill';
 import dva from 'dva';
 import { Toast } from 'antd-mobile';
 import './index.css';
-
-
 // 1. Initialize
 const app = dva({
     onError(e, dispatch) {

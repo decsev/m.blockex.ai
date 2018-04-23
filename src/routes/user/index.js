@@ -4,20 +4,33 @@ import { routerRedux } from 'dva/router';
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
 import queryString from 'query-string';
-import { List } from 'antd-mobile';
+import { List, WhiteSpace, Button, WingBlank } from 'antd-mobile';
+import { config, Func } from '../../utils';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
 
+const { pcHost } = config;
 class IndexPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            online: String(sessionStorage.getItem('_token')),
+            online: !!sessionStorage.getItem('_token'),
         };
         this.dispatch = this.props.dispatch;
     }
-
+    componentWillMount() {
+        // 自动跳转致pc
+        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            window.location.href = `${pcHost}/user`;
+        }
+    }
+    componentDidMount() {
+        Func.changeTitle('数字财经 - 用户中心');
+    }
+    componentWillUnmount() {
+        Func.changeTitle('');
+    }
     goPage = (url) => {
         this.dispatch(routerRedux.push(url));
     }
@@ -26,17 +39,15 @@ class IndexPage extends Component {
         const pathName = this.props.location.pathname;
         const query = queryString.parse(this.props.location.search);
         let userInfo = null;
-        if (this.state.online !== 'null') {
+        if (this.state.online) {
             userInfo = (
-                <Hammer onTap={() => { sessionStorage.setItem('_token', null); this.setState({ online: 'null' });  }} key={shortid.generate()}>
-                    <p><span>已登陆，退出登陆</span></p>
-                </Hammer>
+                <p><span>尊敬的用户，您好！</span></p>
             );
         } else {
             userInfo = (
                 <div>
                     <Hammer onTap={() => { this.goPage('/login?type=user&returl=/#/user?type=user'); }} key={shortid.generate()}>
-                        <p><b>未登录</b></p>
+                        <p><b>登 录</b></p>
                     </Hammer>
                     <p><span>还没有数字财经账号</span></p>
                     <Hammer onTap={() => { this.goPage('/register?type=user'); }} key={shortid.generate()}>
@@ -50,12 +61,12 @@ class IndexPage extends Component {
                 <div
                     className="user-info"
                 >
-                    <img src="https://avatars1.githubusercontent.com/u/6941888?s=460&v=4" alt="" />
+                    <img src="./static/img/man.png" alt="" />
                     {userInfo}
                 </div>
                 <div>
                     <List className="user-list">
-                        <List.Item
+                        {/* <List.Item
                             thumb={<i className="iconfont">&#xe60d;</i>}
                             arrow="horizontal"
                             onClick={() => {
@@ -73,25 +84,41 @@ class IndexPage extends Component {
                         >
                         设置
                         </List.Item>
+                         */}
                         <List.Item
                             thumb={<i className="iconfont">&#xe64f;</i>}
                             onClick={() => {
-                                console.log('推荐数字财经');
+                                this.goPage('recommend');
                             }}
                             arrow="horizontal"
                         >
                         推荐数字财经
                         </List.Item>
                         <List.Item
+                            thumb={<i className="iconfont">&#xe63c;</i>}
+                            onClick={() => {
+                                this.goPage('wechat');
+                            }}
+                            arrow="horizontal"
+                        >
+                        核心用户群
+                        </List.Item>
+                        <List.Item
                             thumb={<i className="iconfont">&#xe61e;</i>}
                             onClick={() => {
-                                console.log('关于我们');
+                                this.goPage('about');
                             }}
                             arrow="horizontal"
                         >
                         关于我们
                         </List.Item>
                     </List>
+                    <WhiteSpace />
+                    {this.state.online &&
+                    <Hammer onTap={() => { sessionStorage.removeItem('_token'); this.setState({ online: false });  }} key={shortid.generate()}>
+                        <div className="loginOutWp"><WingBlank><Button  type="ghost">退出登录</Button></WingBlank></div>
+                    </Hammer>
+                    }
                 </div>
             </div>
         );

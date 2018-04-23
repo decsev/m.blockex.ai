@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import queryString from 'query-string';
-import { List, InputItem, WingBlank, Button, Flex, Toast } from 'antd-mobile';
+import { List, InputItem, WingBlank, Button, Flex, Toast, Modal, WhiteSpace } from 'antd-mobile';
 import { setTimeout } from 'timers';
 import { createForm } from 'rc-form';
+import Hammer from 'react-hammerjs';
+import shortid from 'shortid';
+import Btn from '../../components/Btn';
 import { config, Func } from '../../utils';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
+
 const { getQueryString } = Func;
-if (sessionStorage.getItem('_token') === null) {
+const { alert } = Modal;
+if (sessionStorage.getItem('_token') !== null) {
     if (getQueryString('returl')) {
         window.location.replace(getQueryString('returl'));
     } else {
-        window.location.replace('/');
+        window.location.replace('/#/user?type=user');
     }
 }
 const { phoneReg, passwordReg, codeReg } = config.reg;
-const { countdownTime } = config;
+const { countdownTime, pcHost } = config;
 class Myform extends Component {
     constructor(props) {
         super(props);
@@ -35,11 +40,23 @@ class Myform extends Component {
             // passwordhasError: false,
             // code: 1234,
             // codehasError: false,
-            // times: 0,
+
+            times: 0,
         };
         this.dispatch = this.props.dispatch;
     }
-
+    componentWillMount() {
+        // 自动跳转致pc
+        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            window.location.href = `${pcHost}/reg`;
+        }
+    }
+    componentDidMount() {
+        Func.changeTitle('数字财经 - 用户注册');
+    }
+    componentWillUnmount() {
+        Func.changeTitle('');
+    }
     /**
      * @description 提交注册
      */
@@ -50,15 +67,21 @@ class Myform extends Component {
                 phone: this.state.phone,
                 password: this.state.password,
                 code: this.state.code,
+                rid: getQueryString('rid'),
             },
+        }).then((data) => {
+            if (data.success) {
+                alert('注册成功', '前往登录？', [
+                    { text: '取消', onPress: () => console.log('取消') },
+                    { text: '确定', onPress: () => this.dispatch(routerRedux.push('/login?type=user')) },
+                ]);
+            }
         });
     }
 
 
     onErrorClick = (msg) => {
-        if (this.state.phonehasError) {
-            Toast.info(msg);
-        }
+        Toast.info(msg);
     }
     /**
      * @description 获取验证码
@@ -73,6 +96,7 @@ class Myform extends Component {
             },
         }).then((data) => {
             if (data.success) {
+                Toast.info('验证码获取成功');
                 this.countdown(countdownTime);
             }
         });
@@ -176,11 +200,10 @@ class Myform extends Component {
             getCodeBtn = <Button className="getCodeBtn" disabled>获取验证码</Button>;
         }
         return (
-            <form>
+            <form className="userWp">
                 <div className="myForm">
                     <List
                         renderHeader={() => '注册'}
-                        renderFooter={() => getFieldError('phone') && getFieldError('phone').join(',')}
                     >
                         <InputItem
                             {...getFieldProps('phone')}
@@ -226,15 +249,16 @@ class Myform extends Component {
                         </Flex>
                         <WingBlank>
                             {ctrBtn}
-                            <Button
-                                className="mt20"
-                                onClick={() => {
+                            <WhiteSpace size="xl" />
+                            <Hammer
+                                onTap={() => {
                                     const url = '/login?type=user';
                                     this.goPage(url);
                                 }}
+                                key={shortid.generate()}
                             >
-                              已有账号？立即登录
-                            </Button>
+                                <div><Btn type="default">已有账号？立即<b>登录</b></Btn></div>
+                            </Hammer>
                         </WingBlank>
                     </List>
                 </div>

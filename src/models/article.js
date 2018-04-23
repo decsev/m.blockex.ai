@@ -69,7 +69,7 @@ export default {
         *getList({ payload }, { call, put, select }) {
             const articleObj = yield select(state => state.article);
             let d = null;
-            if (articleObj[`lists_${payload.cat_id}`] === undefined || articleObj[`lists_${payload.cat_id}`].length === 0 || payload.p === 1) {
+            if (articleObj[`lists_${payload.cat}`] === undefined || articleObj[`lists_${payload.cat}`].length === 0 || payload.p === 1) {
                 // 没有该分类的数据对象或没有数据，获取第一页数据 || 下拉刷新时
                 let notice = null;
                 let noData = null;
@@ -97,7 +97,7 @@ export default {
                     }
                     if (data.payload.data.length > 0 && payload.p === 1) {
                         const mparams = {};
-                        mparams[`hasMoreOld_${payload.cat_id}`] = true;
+                        mparams[`hasMoreOld_${payload.cat}`] = true;
                         yield put({ type: 'updateState', payload: mparams });
                     }
                 } else {
@@ -105,20 +105,20 @@ export default {
                 }
             } else {
                 // 存在数据的时候，追加到数组里，获取p+1
-                payload.p = articleObj[`p_${payload.cat_id}`] + 1;
+                payload.p = articleObj[`p_${payload.cat}`] + 1;
                 d = yield call(articleServices.getArticleList, payload);
                 const data = d;
                 if (data.payload.data.length === 0) {
                     const mparams = {};
-                    mparams[`hasMoreOld_${payload.cat_id}`] = false;
+                    mparams[`hasMoreOld_${payload.cat}`] = false;
                     yield put({ type: 'updateState', payload: mparams });
                 }
             }
             if (d.success) {
                 const params = {};
-                params[`lists_${payload.cat_id}`] = d.payload.data;
-                params[`p_${payload.cat_id}`] = payload.p;
-                params.currentCatId = payload.cat_id;
+                params[`lists_${payload.cat}`] = d.payload.data;
+                params[`p_${payload.cat}`] = payload.p;
+                params.currentCatId = payload.cat;
                 yield put({
                     type: 'updataLists',
                     payload: params,
@@ -133,7 +133,7 @@ export default {
     subscriptions: {
         setup({ dispatch, history }) {
             return history.listen(({ pathname }) => {
-                const reg = /^\/article\/\d*$/g;
+                const reg = /^\/article$/g;
                 if (reg.test(pathname)) {
                     // 请求分类
                     dispatch({
@@ -145,7 +145,7 @@ export default {
                     dispatch({
                         type: 'getList',
                         payload: {
-                            cat_id: acId,
+                            cat: acId,
                             size: pageSize,
                         },
                     });

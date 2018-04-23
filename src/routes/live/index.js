@@ -10,8 +10,8 @@ import { Func, config } from '../../utils';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
-const { formatDateTime, dateStr } = Func;
-const { pageSize } = config;
+const { formatDateTime, dateStr, getQueryString } = Func;
+const { pageSize, pcHost } = config;
 const findDomNode = ReactDOM.findDOMNode;
 /**
  * @description 列表页
@@ -36,7 +36,14 @@ class Live extends Component {
         this.dataSource = ds.cloneWithRows([]);
         this.dispatch = this.props.dispatch;
     }
+    componentWillMount() {
+        // 自动跳转致pc
+        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            window.location.href = `${pcHost}/live`;
+        }
+    }
     componentDidMount() {
+        Func.changeTitle('数字财经 - 快讯');
         const hei = findDomNode(this.lv).parentNode.offsetHeight;
         setTimeout(() => {
             this.setState({
@@ -56,6 +63,7 @@ class Live extends Component {
     }
 
     componentWillUnmount() {
+        Func.changeTitle('');
         this.handleScroll();
     }
     /**

@@ -12,3 +12,34 @@
         display: none;
     }
 }
+
+
+/*v1.1.20180422*/
+.my_header{
+    height: p2r(52);
+    background: #00163d;
+    position: relative;
+    width: 100%;
+    .logo{
+        height: p2r(26);
+        position: absolute;
+        left:0;
+        top:p2r(13);
+        padding: 0 p2r(13) 0 p2r(13);
+        img{
+            height: 100%;
+        }
+    }
+    .go_pc{
+        position: absolute;
+        right: 0;
+        top:p2r(13);
+        padding:0 p2r(13);
+        color:#2d83e9;
+        .iconfont{
+            font-size: p2r(26) !important;
+            color:#2d83e9;
+        }
+        
+    }
+}

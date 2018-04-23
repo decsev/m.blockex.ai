@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { NavLink, Link } from 'dva/router';
 import shortid from 'shortid';
+import { Func, config } from '../../utils';
 import HeaderBanner from '../HeaderBanner';
 
 import './index.scss';
@@ -49,23 +50,23 @@ class Menu extends Component {
             this.lv.scrollLeft = canScrollWidth;
         }
     }
-    oddEvent(match, location) {
-        if (!match) {
+    oddEvent(match) {
+        const channelId = Func.getQueryString('id');
+        if (match === channelId) {
+            sessionStorage.setItem('currentCategoryId', channelId);
+            return true;
+        } else {
             return false;
         }
-        const reg = /^\/article\/(\d*)$/g;
-        const channelId = location.pathname.replace(reg, '$1');
-        sessionStorage.setItem('currentCategoryId', channelId);
-        return true;
     }
     render() {
         const { menus } = this.props;
-        const itemRoute = '/article/';
+        const itemRoute = '/article';
         return (
             <div className="header">
                 <div className="top_menu_bar">
                     <div className="top_menu_list" ref={(el) => { this.lv = el; }}>
-                        { menus && menus.map((item, index) => <NavLink to={{ pathname: itemRoute + item.id, search: `?type=news&id=${item.id}` }} key={shortid.generate()} isActive={this.oddEvent}>{item.title}</NavLink>)}
+                        { menus && menus.map((item, index) => <NavLink to={{ pathname: itemRoute, search: `?type=news&id=${item.name}` }} key={shortid.generate()} isActive={() => this.oddEvent(item.name)}>{item.title}</NavLink>)}
                     </div>
                 </div>
             </div>

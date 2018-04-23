@@ -27,7 +27,7 @@ class Layout extends Component {
         const query = queryString.parse(this.props.location.search);
         return (
             <div className="layoutWp">
-                <HeaderBanner />
+                <HeaderBanner {...this.props} />
                 <div className="layoutTabBarWp">
                     <TabBar
                         unselectedTintColor="#949494"
@@ -42,7 +42,7 @@ class Layout extends Component {
                             selectedIcon={<i className="iconfont selected">&#xe612;</i>}
                             selected={query.type === 'news'}
                             onPress={() => {
-                                this.goPage(`/article/${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}?type=news&id=${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}`);
+                                this.goPage(`/article?type=news&id=${sessionStorage.getItem('currentCategoryId') || defaultCategoryId}`);
                             }}
                             data-seed="news"
                         >

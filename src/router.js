@@ -9,7 +9,7 @@ import App from './routes/test';
 
 function RouterConfig({ history, app }) {
     const myRoute = [{
-        path: '/article/:channel',
+        path: '/article',
         models: () => [
             import('./models/article'),
             // import('./models/menu'),
@@ -44,14 +44,37 @@ function RouterConfig({ history, app }) {
         ],
         component: () => import('./routes/user/register'),
     }];
-    const mySingleRoute = [{
-        path: '/articleDetail/:articleId',
-        models: () => [
+    const mySingleRoute = [
+        {
+            path: '/articleDetail/:articleId',
+            models: () => [
             import('./models/articleDetail'),
-        ],
-        component: () => import('./routes/articleDetail'),
-    }];
-    const redirectUrl = `/article/${defaultCategoryId}?type=news&id=${defaultCategoryId}`;
+            ],
+            component: () => import('./routes/articleDetail'),
+        },
+        {
+            path: '/about',
+            models: () => [
+                import('./models/user'),
+            ],
+            component: () => import('./routes/user/about'),
+        },
+        {
+            path: '/recommend',
+            models: () => [
+                import('./models/user'),
+            ],
+            component: () => import('./routes/user/recommend'),
+        },
+        {
+            path: '/wechat',
+            models: () => [
+                import('./models/user'),
+            ],
+            component: () => import('./routes/user/wechat'),
+        },
+    ];
+    const redirectUrl = `/article?type=news&id=${defaultCategoryId}`;
     return (
         <Router history={history}>
             <Switch>

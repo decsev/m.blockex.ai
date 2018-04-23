@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import _ from 'lodash';
-import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, ActivityIndicator } from 'antd-mobile';
+import { WhiteSpace, Toast, ListView, PullToRefresh, Card, Grid, Modal, Flex, ActivityIndicator, Carousel, WingBlank } from 'antd-mobile';
 import Hammer from 'react-hammerjs';
 import shortid from 'shortid';
 import { Func, config } from '../../utils';
@@ -12,7 +12,9 @@ import './index.scss';
 import '../../assets/font/iconfont.css';
 
 const { formatDateTime, dateStr, getQueryString } = Func;
-const { pageSize } = config;
+const {
+    pageSize, defaultCategoryId, banner, pcHost,
+} = config;
 const findDomNode = ReactDOM.findDOMNode;
 /**
  * @description 列表页
@@ -27,6 +29,10 @@ class Article extends Component {
             isLoading: false,
             height: document.documentElement.clientHeight * 3 / 4,
             newArticleTips: null,
+            data: [
+                { img: '', link: '' },
+            ],
+            imgHeight: 100,
         };
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
@@ -34,7 +40,14 @@ class Article extends Component {
         this.dataSource = ds.cloneWithRows([]);
         this.dispatch = this.props.dispatch;
     }
+    componentWillMount() {
+        // 自动跳转致pc
+        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            window.location.href = `${pcHost}/channel/${getQueryString('id')}`;
+        }
+    }
     componentDidMount() {
+        Func.changeTitle('数字财经 - 文章列表');
         const hei = findDomNode(this.lv).parentNode.offsetHeight;
         setTimeout(() => {
             this.setState({
@@ -49,10 +62,16 @@ class Article extends Component {
                 this.lv.scrollTo(0, scrollY);
             }, 100);
         }
+
+        setTimeout(() => {
+            this.setState({
+                data: banner,
+            });
+        }, 100);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.match.params.channel !== this.props.match.params.channel) {
+        if (nextProps.location.search !== this.props.location.search) {
             const acId = getQueryString('id');
             const scrollY = sessionStorage.getItem(`articleListScroll_${acId}`);
             if (scrollY) {
@@ -63,13 +82,13 @@ class Article extends Component {
         }
     }
     componentDidUpdate() {
-        const channel = this.props.match.params.channel || null;
+        const channel = Func.getQueryString('id');
         if (channel !== null) {
             sessionStorage.setItem('currentCategoryId', channel);
         }
     }
     componentWillUnmount() {
-
+        Func.changeTitle('');
     }
 
 
@@ -83,7 +102,7 @@ class Article extends Component {
         this.dispatch({
             type: 'article/getList',
             payload: {
-                cat_id: acId,
+                cat: acId,
                 size: pageSize,
                 p: 1,
             },
@@ -130,7 +149,7 @@ class Article extends Component {
         this.dispatch({
             type: 'article/getList',
             payload: {
-                cat_id: acId,
+                cat: acId,
                 size: pageSize,
             },
         }).then(() => {
@@ -147,7 +166,7 @@ class Article extends Component {
     }
     goToDetail = (data) => {
         const articleId = data.id;
-        this.dispatch(routerRedux.push(`/articleDetail/${articleId}`));
+        this.dispatch(routerRedux.push(`/articleDetail/${articleId}?type=news`));
     }
 
     goToRecorded = () => {
@@ -211,12 +230,35 @@ class Article extends Component {
     }
 
     renderHeader = () => {
-        return null;
-        // if (!!this.state.newArticleTips) {
-        //     return (<div className="newArticleTips">{this.state.newArticleTips}</div>);
-        // } else {
-        //     return null;
-        // }
+        const isIndex = String(defaultCategoryId) === getQueryString('id');
+
+        return !!isIndex ?
+            <div className="banner">
+                <Carousel
+                    autoplay
+                    infinite
+                >
+                    {this.state.data.map(val => (
+                        <a
+                            key={val.img}
+                            href={val.link}
+                            style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+                        >
+                            <img
+                                className="bannerImg"
+                                src={val.img}
+                                alt=""
+                                style={{ width: '100%', verticalAlign: 'top' }}
+                                onLoad={() => {
+                                    // fire window resize event to change height
+                                    window.dispatchEvent(new Event('resize'));
+                                    this.setState({ imgHeight: 'auto' });
+                                }}
+                            />
+                        </a>
+                    ))}
+                </Carousel>
+            </div> : null;
     }
 
     render() {
@@ -224,12 +266,15 @@ class Article extends Component {
         const { menus } = article;
         const lists = article[`lists_${getQueryString('id')}`] || [];
         this.dataSource = this.dataSource.cloneWithRows(lists);
+        const isIndex = String(defaultCategoryId) === getQueryString('id');
+        const listviewClass = isIndex ? 'bobox' : 'bobox';
+
         return (
             <div className="article-box">
                 <Menu menus={menus} />
-                <div className="bobox">
+                <div className={listviewClass}>
                     {!!this.state.newArticleTips && <div className="newArticleTips">{this.state.newArticleTips}</div>}
-                    {/* history.location.pathname */}
+
                     <ListView
                         key={this.state.useBodyScroll ? '0' : '1'}
                         ref={(el) => { this.lv = el; }}

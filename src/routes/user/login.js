@@ -2,21 +2,24 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import queryString from 'query-string';
-import { List, InputItem, WingBlank, Button } from 'antd-mobile';
+import { List, InputItem, WingBlank, Button, WhiteSpace, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import Hammer from 'react-hammerjs';
+import shortid from 'shortid';
+import Btn from '../../components/Btn';
 import { config, Func } from '../../utils';
 import './index.scss';
 import '../../assets/font/iconfont.css';
 
-
+const { pcHost } = config;
 const { phoneReg, passwordReg } = config.reg;
 const { getQueryString } = Func;
 
-if (sessionStorage.getItem('_token') === null) {
+if (sessionStorage.getItem('_token') !== null) {
     if (getQueryString('returl')) {
         window.location.replace(getQueryString('returl'));
     } else {
-        window.location.replace('/');
+        window.location.replace('/#/user?type=user');
     }
 }
 
@@ -28,11 +31,26 @@ class Myform extends Component {
             phonehasError: true,
             password: null,
             passwordhasError: true,
+            // phone: 13719171472,
+            // phonehasError: false,
+            // password: 123456,
+            // passwordhasError: false,
         };
         this.dispatch = this.props.dispatch;
     }
+    componentWillMount() {
+        // 自动跳转致pc
+        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            window.location.href = `${pcHost}/login`;
+        }
+    }
+    componentDidMount() {
+        Func.changeTitle('数字财经 - 用户登录');
+    }
+    componentWillUnmount() {
+        Func.changeTitle('');
+    }
     onSubmit = () => {
-        // window.location.replace('http://www.baidu.com');
         this.dispatch({
             type: 'user/login',
             payload: {
@@ -49,6 +67,9 @@ class Myform extends Component {
                 }
             }
         });
+    }
+    onErrorClick = (msg) => {
+        Toast.info(msg);
     }
     goPage = (url) => {
         this.dispatch(routerRedux.push(url));
@@ -93,11 +114,10 @@ class Myform extends Component {
         }
 
         return (
-            <form>
+            <form className="userWp">
                 <div className="myForm">
                     <List
                         renderHeader={() => '登录'}
-                        renderFooter={() => getFieldError('userName') && getFieldError('userName').join(',')}
                     >
                         <InputItem
                             {...getFieldProps('phone')}
@@ -124,15 +144,16 @@ class Myform extends Component {
                         </InputItem>
                         <WingBlank>
                             {ctrBtn}
-                            <Button
-                                className="mt20"
-                                onClick={() => {
+                            <WhiteSpace size="xl" />
+                            <Hammer
+                                onTap={() => {
                                     const url = '/register?type=user';
                                     this.goPage(url);
                                 }}
+                                key={shortid.generate()}
                             >
-                              还没账号？立即注册
-                            </Button>
+                                <div><Btn type="default">还没账号？立即<b>注册</b></Btn></div>
+                            </Hammer>
                         </WingBlank>
                     </List>
                 </div>

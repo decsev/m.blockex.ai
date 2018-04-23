@@ -1,0 +1,29 @@
+@import 'global';
+
+.navBar{
+    height: p2r(50);
+    background: #108ee9;
+    color:#ffffff;
+    position: relative;
+    width: 100%;
+    .iconfont{
+        color:#ffffff;
+        line-height: p2r(50);
+        padding:0 p2r(5) 0 p2r(15);
+        font-size: p2r(10);
+        position: absolute;
+        left:0;
+        top:0;
+    }
+    .mtitle{
+        padding:0 p2r(30);
+        text-align: center;
+        color:#fff;
+        line-height: p2r(50);
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        display: block;
+        font-size: p2r(16);
+    }
+}

@@ -11,9 +11,9 @@ html, body {
     top:0;
     bottom:0;
     width: 100%;
-    .bobox{
+    .boboxHome{
         position: absolute;
-        top:p2r(38);
+        top:p2r(188);
         bottom: 0;
         width: 100%;
         .loadingTips{
@@ -29,6 +29,31 @@ html, body {
             color: #0061d6;
         }
     }
+
+    .bobox{
+        position: absolute;
+        top:p2r(38);
+        bottom: 0;
+        left:0;
+        right: 0;
+        .loadingTips{
+            text-align: center;
+            font-size: p2r(12);
+        }
+        .newArticleTips{
+            width: 100%;
+            text-align: center;
+            font-size: p2r(12);
+            line-height: p2r(30);
+            background-color: #d0e8fa;
+            color: #0061d6;
+        }
+        .am-list-view-scrollview-content{
+            left:0; 
+            right: 0;
+        }
+    }
+
 }
 
 .sticky{
@@ -50,7 +75,7 @@ html, body {
         font-size: p2r(16);
         line-height: p2r(22);
         padding-bottom: p2r(6);
-        font-weight: 500;
+        font-weight: 700;
     }
     .articleRowBody{
         padding: p2r(0) 0 p2r(10);
@@ -64,6 +89,7 @@ html, body {
         .des {
             width: 67%;
             float: right;
+            
         }
         img {
             float: left;
@@ -75,6 +101,21 @@ html, body {
             font-size: p2r(14);
             line-height: 1.3;
             margin:0;
+            word-break: break-all;
+            overflow : hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 4;
+            /* Firefox */
+            display:-moz-box;
+            -moz-box-orient:vertical;
+
+            /* Safari、Opera 以及 Chrome */
+            display:-webkit-box;
+            -webkit-box-orient:vertical;
+
+            /* W3C */
+            display:box;
+            box-orient:vertical;
         }
         &:affter{
             clear: both;
@@ -104,4 +145,11 @@ html, body {
 
 .am-list-header{
     padding:0 !important;
+}
+
+.banner{
+    width: 100%;
+    overflow: hidden;
+    .bannerImg{
+    }
 }

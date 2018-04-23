@@ -19,6 +19,9 @@
         b{
             font-size: 15px;
         }
+        span{
+            font-weight: 300;
+        }
     }
 }
 .user-list{
@@ -69,4 +72,129 @@
     font-size: p2r(14);
     color:#000;
     border-radius: 0;
+}
+
+.userWp{
+    height: 100%;
+    background: #fff;
+    .am-list-header{
+        background: #f5f5f9;
+        padding: 15px 15px 9px !important;
+    }
+    .am-list-body{
+        position: static;
+        height: 100%;
+    }
+}
+
+.bodyWp {
+    position: absolute;
+    top:p2r(50);
+    bottom:0;
+    left:0;
+    right: 0;
+    overflow-y: scroll;
+    padding:p2r(10);
+    background: #fff;
+    .logo{
+        text-align: center;
+        padding: p2r(20);
+        img{
+            width: p2r(150)
+        }
+    }
+    .intro{
+        padding:p2r(30) 0;
+        p{
+            padding:0;
+            margin:0;
+            text-align: left;
+            font-size: p2r(16);
+            line-height: 1.5;
+            color:#666;
+        } 
+    }
+    .introAboutUs{
+        font-size: p2r(16);
+        line-height: 1.5;
+        color:#666;
+        p{
+        }
+
+    }
+    .wechat{
+        .recommend{
+            padding:p2r(15);
+            color:#666;
+            line-height: 1.5;
+            font-size: p2r(16);
+        }
+        .codeImg{
+            text-align: center;
+            img{
+                width: 50%
+            }
+            p{
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+    .share-tpl{
+        background:#000 url(../../assets/bg2.jpg) no-repeat top center;
+        background-size: 100%;
+        padding:30px 20px;
+        text-align:center;
+        p{
+            margin: 0;
+        }
+        .share-header{
+            img{width:50%}
+            p{color:#fff;font-size:16px;padding:10px 0 20px 0}
+        }
+        .share-content{background:#fff;border-radius:5px;padding:20px}
+        .share-content-top{
+            .share-code{font-size:40px;color:#5672f9;padding:10px 0}
+            .share-name{
+                font-size:12px;color:#b2b2b2;line-height:20px;
+                b{font-size:20px;color:#6e6e6e}
+            }
+            .chance{color:#e1a951;padding:15px 0 10px 0;font-size:15px}
+            .tips{
+                color:#999;font-size:12px;line-height:14px;text-align:left;
+                span{color:#e1a951}
+            }
+            button{background:#5672f9;color:#fff;line-height:35px;font-size:15px;border:none;width:39%;border-radius:5px}
+        }
+        .share-content-bottom{
+            padding-top:30px;margin-top:20px;border-top:dashed 1px #999;position: relative;
+            img{width:40%}
+            p{padding-top:20px;
+                a{color:#fff;line-height:40px;background:#5672f9;padding:10px 30px;border-radius:16px}
+            }
+        }
+        .share-content-bottom:after{content:" "; display: block;background: #000;position: absolute;height: 20px;width: 20px;top: -10px;border-radius: 50%;}
+        .share-content-bottom:before{content:" "; display: block;background: #000;position: absolute;height: 20px;width: 20px;top: -10px;border-radius: 50%;}
+        .share-content-bottom:after{right:-30px;}
+        .share-content-bottom:before{left:-30px;}
+    }
+    
+}
+.recommend{
+    height: 100%;
+    .bodyWp{
+        padding: 0;
+    }
+}
+.loginOutWp{
+    margin-top: p2r(50);
+}
+.myForm{
+    .am-list-item.am-input-error .am-input-control input{
+        color:#2a7de0;
+    }
+    .am-list-item .am-input-control input{
+        font-weight: bold;
+        font-size: p2r(17);
+    }
 }
