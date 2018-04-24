@@ -5,6 +5,7 @@ import Hammer from 'react-hammerjs';
 import { Func, config } from '../../utils';
 import Header from '../../components/Header';
 import styles from './index.scss';
+import favourite from '../../models/favourite';
 
 const { name, pcHost } = config;
 const { formatDateTime, dateStr, getQueryString } = Func;
@@ -30,6 +31,20 @@ class ArticleDetail extends Component {
     componentWillUnmount() {
         Func.changeTitle('');
     }
+    ctrFavourite = () => {
+        console.log(this.props);
+        const { params } = this.props.match;
+        const p = {
+            type: 1,
+            object_id: params.articleId,
+        };
+        this.dispatch({
+            type: 'favourite/ctrFavourite',
+            payload: {
+                ...p,
+            },
+        });
+    }
     render() {
         const data = this.props.articleDetail;
         Func.changeTitle(`数字财经 - ${this.props.articleDetail.title}`);
@@ -46,6 +61,14 @@ class ArticleDetail extends Component {
             },
             title: name,
         };
+        // 判断文章是否已经加入收藏
+        const { favourites } = this.props.favourite;
+        const { params } = this.props.match;
+        let collectedClass = '';
+
+        if (favourites.indexOf(params.articleId) > -1) {
+            collectedClass = 'collected';
+        }
         return (
             <div>
                 <Header {...opt} />
@@ -54,6 +77,11 @@ class ArticleDetail extends Component {
                     <div className="subTitle">{formatDateTime(new Date(data.create_time  * 1000), 'yyyy-MM-dd hh:mm:ss')}</div>
                     <div className="description" dangerouslySetInnerHTML={{ __html: data.description }} />
                     <div className="content"  dangerouslySetInnerHTML={{ __html: data.content }} />
+                </div>
+                <div className="article-detail-bottom">
+                    <Hammer onTap={() => { this.ctrFavourite(); }}>
+                        <span className={collectedClass}><i className="icon iconfont">&#xe60d;</i> 收藏</span>
+                    </Hammer>
                 </div>
             </div>
         );
@@ -67,6 +95,7 @@ ArticleDetail.propTypes = {
 function mapStateToProps(state) {
     return {
         articleDetail: state.articleDetail,
+        favourite: state.favourite,
     };
 }
 

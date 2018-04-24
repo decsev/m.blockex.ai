@@ -18,6 +18,7 @@ const fetch = (options) => {
     const cloneData = lodash.cloneDeep(data);
 
     const Token = sessionStorage.getItem('_token');
+    const RegNumber = sessionStorage.getItem('_RegNumber');
     const headers = { Token };
 
     if (fetchType === 'JSONP') {
@@ -86,6 +87,7 @@ export default function request(options) {
             throw response.data;
         }
     }).catch((error) => {
+        debugger;
         const { response } = error;
         let msg;
         let statusCode;

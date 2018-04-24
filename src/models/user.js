@@ -9,9 +9,7 @@ const { getQueryString } = Func;
 export default {
     namespace: 'user',
     state: {
-        reg: {
-
-        },
+        RegNumber: null,
     },
     reducers: {
         updateState(state, { payload }) {
@@ -27,6 +25,7 @@ export default {
             const data = yield call(userServices.register, params);
             if (data.success) {
                 // yield put({ type: 'setMenus', payload: { menus: menuArr } });
+                yield put({ type: 'updateState', payload: { RegNumber: null } });
                 return data;
             } else {
                 throw data;
@@ -36,7 +35,8 @@ export default {
             const params = payload;
             const data = yield call(userServices.login, params);
             if (data.success) {
-                // yield put({ type: 'setMenus', payload: { menus: menuArr } });
+                const { RegNumber } = data.payload.data;
+                yield put({ type: 'updateState', payload: { RegNumber } });
                 return data;
             } else {
                 throw data;

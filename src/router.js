@@ -49,6 +49,7 @@ function RouterConfig({ history, app }) {
             path: '/articleDetail/:articleId',
             models: () => [
             import('./models/articleDetail'),
+            import('./models/favourite'),
             ],
             component: () => import('./routes/articleDetail'),
         },

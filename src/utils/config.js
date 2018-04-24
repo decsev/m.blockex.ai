@@ -34,7 +34,9 @@ module.exports = {
         articleCategory: `${APIV1}/api/news/category`, // 文章分类
         judge: `${APIV1}/api/news/act`, // 看多空
         register: `${APIV2}/reg`, // 注册
-        login: `${APIV2}/auth`, // 注册
+        login: `${APIV2}/auth`, // 登陆
+        addFavourite: `${APIV2}/api/custom/addFavourite`, // 加收藏
+        delFavourite: `${APIV2}/api/custom/delFavourite`, // 取消收藏
     },
     // defaultCategoryId: '62', // 文章默认类别
     defaultCategoryId: 'top', // 文章默认类别

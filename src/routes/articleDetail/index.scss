@@ -14,7 +14,7 @@
 .articleDetailWp{
     position: absolute;
     top:p2r(50);
-    bottom:0;
+    bottom:p2r(40);
     left:0;
     right: 0;
     overflow-y: scroll;
@@ -44,6 +44,27 @@
         line-height: p2r(24);
         img{
             width: 100%;
+        }
+    }
+}
+
+.article-detail-bottom{
+    height: p2r(40);
+    line-height: p2r(40);
+    width: 100%;
+    border-top:1px solid #eee;
+    background: #fff;
+    position: absolute;
+    bottom:0;
+    text-align: center;
+    span{
+        font-size: p2r(14);
+        display: block;
+        color:#666;
+        &.collected{
+            .iconfont{
+                color:#108ee9;
+            }
         }
     }
 }

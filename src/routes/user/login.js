@@ -60,6 +60,7 @@ class Myform extends Component {
         }).then((data) => {
             if (data.success) {
                 sessionStorage.setItem('_token', data.payload.data.token);
+                sessionStorage.setItem('_RegNumber', data.payload.data.RegNumber);
                 if (getQueryString('returl')) {
                     window.location.replace(getQueryString('returl'));
                 } else {

@@ -35,13 +35,19 @@ class IndexPage extends Component {
         this.dispatch(routerRedux.push(url));
     }
     render() {
-        const { location } = this.props;
+        const { location, user } = this.props;
         const pathName = this.props.location.pathname;
         const query = queryString.parse(this.props.location.search);
         let userInfo = null;
+        const _RegNumber = sessionStorage.getItem('_RegNumber');
         if (this.state.online) {
             userInfo = (
-                <p><span>尊敬的用户，您好！</span></p>
+                <div>
+                    <p><span>昵称</span></p>
+                    <p><b>{ !!_RegNumber ? `0x${_RegNumber}` : null }</b></p>
+                    <p><span>尊敬的用户，您好！</span></p>
+                </div>
+
             );
         } else {
             userInfo = (
@@ -115,7 +121,7 @@ class IndexPage extends Component {
                     </List>
                     <WhiteSpace />
                     {this.state.online &&
-                    <Hammer onTap={() => { sessionStorage.removeItem('_token'); this.setState({ online: false });  }} key={shortid.generate()}>
+                    <Hammer onTap={() => { sessionStorage.removeItem('_token'); sessionStorage.removeItem('_RegNumber'); this.setState({ online: false });  }} key={shortid.generate()}>
                         <div className="loginOutWp"><WingBlank><Button  type="ghost">退出登录</Button></WingBlank></div>
                     </Hammer>
                     }
@@ -128,4 +134,12 @@ class IndexPage extends Component {
 IndexPage.propTypes = {
 };
 
-export default connect()(IndexPage);
+function mapStateToProps(state) {
+    return {
+        user: state.user,
+        // menus: state.menu.menus,
+    };
+}
+
+
+export default connect(mapStateToProps)(IndexPage);

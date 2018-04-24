@@ -18,11 +18,9 @@ class Index extends Component {
             <div>
                 <div className="navBar">
                     <Hammer onTap={() => { goback(); }}>
-                        <div>
-                            <i className="iconfont">&#xe61f;</i>
-                            <span className="mtitle">{title}</span>
-                        </div>
+                        <i className="iconfont">&#xe61f;</i>
                     </Hammer>
+                    <span className="mtitle">{title}</span>
                 </div>
             </div>
         );
